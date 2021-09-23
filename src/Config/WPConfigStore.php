@@ -2,7 +2,7 @@
 
 namespace Jascha030\Xerox\Config;
 
-final class ConfigStore
+final class WPConfigStore
 {
     public const BOOLEAN_VALUES = [
         'AUTOMATIC_UPDATER_DISABLED',
