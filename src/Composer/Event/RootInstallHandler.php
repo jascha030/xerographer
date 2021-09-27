@@ -13,9 +13,9 @@ final class RootInstallHandler
     public static function postInstall(Event $event): void
     {
         $vendorDir  = $event->getComposer()->getConfig()->get('vendor-dir');
-        $root       = dirname($vendorDir, 2);
+        $root       = dirname($vendorDir);
 
-        $envExample = $root . '/.env.example';
+        $envExample = dirname(__FILE__, 4) . '/.env.example';
         $env        = $root . '/public/.env';
 
         if (! file_exists($env)) {
