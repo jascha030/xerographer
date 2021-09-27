@@ -1,0 +1,27 @@
+{
+  "name": "jascha030/xerox",
+  "description": "Framework, heavily inspired by laravel and roots/bedrock, aiming to help relieve your WordPression.",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Jascha030",
+      "email": "contact@jaschavanaalst.nl"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "php": "^7.4|^8.0",
+    "vlucas/phpdotenv": "^5.3",
+    "symfony/console": "^5.3",
+    "symfony/finder": "^5.3",
+    "symfony/var-dumper": "^5.3",
+    "symfony/process": "^5.3",
+    "ext-curl": "*"
+  },
+  "require-dev": {
+    "roave/security-advisories": "dev-latest",
+    "friendsofphp/php-cs-fixer": "^3.1",
+    "phpunit/phpunit": "^9.5",
+    "composer/composer": "^2.1"
+  }
+}
