@@ -12,11 +12,17 @@ final class RootInstallHandler
 
     public static function postInstall(Event $event): void
     {
-        $vendorDir = $event->getComposer()->getConfig()->get('vendor-dir');
-        $root      = dirname($vendorDir, 2);
-        $env       = $root . '/.env.example';
+        $vendorDir  = $event->getComposer()->getConfig()->get('vendor-dir');
+        $root       = dirname($vendorDir, 2);
 
-        if (file_exists($env)) {
+        $envExample = $root . '/.env.example';
+        $env        = $root . '/public/.env';
+
+        if (! file_exists($env)) {
+            if(! copy($envExample, $env)) {
+                throw new \RuntimeException("Couldn't copy env to path: \"{$env}\".");
+            }
+
             self::generateWordpressSalts($env);
         }
     }
