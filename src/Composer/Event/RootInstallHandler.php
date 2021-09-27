@@ -16,7 +16,7 @@ final class RootInstallHandler
         $root       = dirname($vendorDir);
 
         $envExample = dirname(__FILE__, 4) . '/.env.example';
-        $env        = $root . '/public/.env';
+        $env        = $root . '/.env';
 
         if (! file_exists($env)) {
             if(! copy($envExample, $env)) {
