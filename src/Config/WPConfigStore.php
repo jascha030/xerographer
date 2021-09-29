@@ -41,7 +41,7 @@ final class WPConfigStore
 
     public static function add(string $key, $value): void
     {
-        self::has($key) || $value;
+        self::has($key) || self::$store[$key] = $value;
     }
 
     public static function has(string $key): bool
