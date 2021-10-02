@@ -1,0 +1,12 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+namespace Jascha030;
+
+use Symfony\Component\Console\Application;
+
+require dirname(__FILE__, 2) . '/includes/bootstrap.php';
+
+$app = new Application('Xerographer', '1.0.0');
