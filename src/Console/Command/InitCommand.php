@@ -38,13 +38,12 @@ final class InitCommand extends Command
     public function configure(): void
     {
         $this->setDescription('Init a new Environment with database.')
-             ->addArgument('name', InputArgument::OPTIONAL)
              ->addOption('production', 'p', InputOption::VALUE_NONE);
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $name     = $input->getArgument('name');
+        $name     = $this->ask($input, $output, 'name');
         $database = $this->sanitizeDatabaseName($name);
         $user     = $this->ask($input, $output, 'user');
         $password = $this->ask($input, $output, 'password');

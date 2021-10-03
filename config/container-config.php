@@ -25,6 +25,9 @@ return [
     /**
      * Questions
      */
+    'command.init.questions.name' => static function () {
+        return new Question('Project name: ');
+    },
     'command.init.questions.user' => static function () {
         return new Question('Enter mysql username: ');
     },
