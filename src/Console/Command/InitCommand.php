@@ -73,11 +73,15 @@ final class InitCommand extends Command
 
     private function valetLink(string $domain, OutputInterface $output): void
     {
-        $process = Process::fromShellCommandline("valet link {$domain}");
-
-        $process->run(static function ($type, $buffer) use ($output) {
+        $callback = static function ($type, $buffer) use ($output) {
             $output->writeln($buffer);
-        });
+        };
+
+        $link = Process::fromShellCommandline("valet link {$domain}");
+        $link->run($callback);
+
+        $secure = Process::fromShellCommandline('valet secure');
+        $secure->run($callback);
     }
 
     /**
