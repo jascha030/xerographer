@@ -9,6 +9,7 @@
     }
   ],
   "minimum-stability": "stable",
+
   "require": {
     "php": "^7.4|^8.0",
     "vlucas/phpdotenv": "^5.3",
@@ -32,5 +33,13 @@
     "psr-4": {
       "Jascha030\\Xerox\\": "src/"
     }
-  }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Jascha030\\Xerox\\Tests\\": "tests"
+    }
+  },
+  "bin": [
+    "bin/xerographer"
+  ]
 }
