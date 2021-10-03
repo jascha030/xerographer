@@ -51,6 +51,10 @@ class DatabaseService implements DatabaseServiceInterface
      */
     public function createDatabase(string $name): void
     {
+        if (strpos($name, 'wp_') === false) {
+            $name = 'wp_' . $name;
+        }
+
         $this->connect()
             ->connection
             ->createSchemaManager()
