@@ -1,6 +1,6 @@
 <?php
 
-namespace Composer;
+namespace Jascha030\Xerox\Tests\Composer;
 
 use Jascha030\Xerox\Composer\ComposerHelper;
 use PHPUnit\Framework\TestCase;
