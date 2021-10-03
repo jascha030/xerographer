@@ -25,10 +25,10 @@ return [
     /**
      * Questions
      */
-    'command.init.questions.user' => static function (ContainerInterface $c) {
+    'command.init.questions.user' => static function () {
         return new Question('Enter mysql username');
     },
-    'command.init.questions.password' => static function (ContainerInterface $c) {
+    'command.init.questions.password' => static function () {
         $question = new Question('Password');
         $question->setHidden(true);
         $question->setHiddenFallback(false);
