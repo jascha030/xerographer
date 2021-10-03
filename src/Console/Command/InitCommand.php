@@ -24,10 +24,13 @@ final class InitCommand extends Command
     private const SALTS_URL   = "https://api.wordpress.org/secret-key/1.1/salt";
     private const CONST_REGEX = "/define\('([A-Z_]*)',[ \t]*'(.*)'\);/";
 
+    private string $directory;
+
     private ContainerInterface $container;
 
     public function __construct(ContainerInterface $container) {
         $this->container = $container;
+        $this->directory = getcwd();
 
         parent::__construct('init');
     }
@@ -104,7 +107,7 @@ final class InitCommand extends Command
             'debug'    => 'true',
         ]);
 
-        $root = ComposerHelper::getComposerRoot();
+        $root = $this->directory;
         $env = $root . '/public/.env';
 
         if (!file_exists($env)) {
