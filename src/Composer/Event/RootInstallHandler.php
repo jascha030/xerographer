@@ -14,7 +14,6 @@ final class RootInstallHandler
     {
         $vendorDir  = $event->getComposer()->getConfig()->get('vendor-dir');
         $root       = dirname($vendorDir);
-
         $envExample = dirname(__FILE__, 4) . '/.env.example';
         $env        = $root . '/.env';
 
@@ -51,10 +50,7 @@ final class RootInstallHandler
                     echo $key . "='{$value}'" . PHP_EOL;
                 }
 
-                file_put_contents($envPath,
-                    str_replace(self::TEMPLATE,
-                        ob_get_clean(),
-                        $content));
+                file_put_contents($envPath, str_replace(self::TEMPLATE, ob_get_clean(), $content));
             }
         }
     }
