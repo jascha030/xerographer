@@ -22,6 +22,8 @@ final class InitCommand extends Command
     private const SALTS_URL   = "https://api.wordpress.org/secret-key/1.1/salt";
     private const CONST_REGEX = "/define\('([A-Z_]*)',[ \t]*'(.*)'\);/";
 
+    private bool $production;
+
     private string $directory;
 
     private ContainerInterface $container;
@@ -29,6 +31,7 @@ final class InitCommand extends Command
     public function __construct(ContainerInterface $container) {
         $this->container = $container;
         $this->directory = getcwd();
+        $this->production = false;
 
         parent::__construct('init');
     }
@@ -41,6 +44,7 @@ final class InitCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
+        $this->production = $input->getOption('production');
         $name     = $this->ask($input, $output, 'name');
         $database = $this->sanitizeDatabaseName($name);
         $user     = $this->ask($input, $output, 'user');
@@ -168,7 +172,7 @@ final class InitCommand extends Command
             'password' => $password,
             'url'      => $url,
             'salts'    => $salts,
-            'debug'    => 'true',
+            'debug'    => $this->production ? 'false': 'true',
         ]);
     }
 }
