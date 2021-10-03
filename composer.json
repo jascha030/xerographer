@@ -16,10 +16,11 @@
     "symfony/finder": "^5.3",
     "symfony/var-dumper": "^5.3",
     "symfony/process": "^5.3",
-    "ext-curl": "*",
     "doctrine/dbal": "^3.1",
     "twig/twig": "^3.3",
-    "php-di/php-di": "^6.3"
+    "php-di/php-di": "^6.3",
+    "laravel/valet": "^2.16",
+    "ext-curl": "*"
   },
   "require-dev": {
     "roave/security-advisories": "dev-latest",
