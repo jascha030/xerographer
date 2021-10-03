@@ -36,10 +36,8 @@ final class InitCommand extends Command
         $user     = $this->ask($input, $output, 'user');
         $password = $this->ask($input, $output, 'password');
 
-        $databaseService = new DatabaseService($user, $password);
-
         try {
-            $databaseService->createDatabase($database);
+            (new DatabaseService($user, $password))->createDatabase($database);
         } catch (Exception $e) {
             $output->writeln($e->getMessage());
 
