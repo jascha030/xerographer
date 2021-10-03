@@ -80,6 +80,9 @@ final class InitCommand extends Command
             $output->writeln($buffer);
         };
 
+        $cd = Process::fromShellCommandline("cd public/");
+        $cd->run($callback);
+
         $link = Process::fromShellCommandline("valet link {$domain}");
         $link->run($callback);
 
@@ -133,7 +136,7 @@ final class InitCommand extends Command
             ob_start();
 
             foreach ($salts as $key => $value) {
-                echo $key . "='{$value}'" . PHP_EOL;
+                echo $key . "=\"{$value}\"" . PHP_EOL;
             }
 
             return ob_get_clean();
