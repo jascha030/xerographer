@@ -35,5 +35,7 @@ return [
 
         return $question;
     },
-
+    'command.init.questions.url' => static function () {
+        return new Question('Enter url domain name (without domain extension) https://');
+    }
 ];
