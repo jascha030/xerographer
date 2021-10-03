@@ -80,13 +80,12 @@ final class InitCommand extends Command
             $output->writeln($buffer);
         };
 
-        $cd = Process::fromShellCommandline("cd public/");
-        $cd->run($callback);
-
         $link = Process::fromShellCommandline("valet link {$domain}");
+        $link->setWorkingDirectory($this->directory . '/public');
         $link->run($callback);
 
         $secure = Process::fromShellCommandline('valet secure');
+        $secure->setWorkingDirectory($this->directory . '/public');
         $secure->run($callback);
     }
 
