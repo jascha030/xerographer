@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd" backupGlobals="false" bootstrap="includes/bootstrap.php" colors="true" verbose="true" testdox="true">
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">src</directory>
+        </include>
+        <report>
+            <clover outputFile="cov.xml"/>
+            <text outputFile="php://stdout"/>
+        </report>
+    </coverage>
+    <testsuite name="main">
+        <directory>tests</directory>
+    </testsuite>
+    <logging/>
+</phpunit>
