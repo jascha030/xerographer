@@ -5,8 +5,24 @@ declare(strict_types=1);
 
 namespace Jascha030;
 
+use Jascha030\Xerox\Console\Command\InitCommand;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
 
 require dirname(__FILE__, 2) . '/includes/bootstrap.php';
 
 $app = new Application('Xerographer', '1.0.0');
+
+try {
+    $container = getContainer();
+} catch (\Exception $e) {
+    return Command::FAILURE;
+}
+
+$app->add(new InitCommand($container));
+
+try {
+    $app->run();
+} catch (\Exception $e) {
+    return Command::FAILURE;
+}
