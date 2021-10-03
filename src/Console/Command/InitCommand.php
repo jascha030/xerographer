@@ -3,12 +3,10 @@
 namespace Jascha030\Xerox\Console\Command;
 
 use Exception;
-use Jascha030\Xerox\Composer\ComposerHelper;
 use Jascha030\Xerox\Database\DatabaseService;
 use Jascha030\Xerox\Twig\TwigTemplater;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -95,18 +93,7 @@ final class InitCommand extends Command
      */
     private function generateDotEnv(string $database, string $user, string $password, string $url): void
     {
-        /** @var TwigTemplater $templater */
-        $templater = $this->container->get(TwigTemplater::class);
-        $salts     = $this->getSalts();
-
-        $envString = $templater->render('env.twig', [
-            'name'     => $database,
-            'user'     => $user,
-            'password' => $password,
-            'url'      => $url,
-            'salts'    => $salts,
-            'debug'    => 'true',
-        ]);
+        $envString = $this->generateEnvContents($database, $user, $password, $url);
 
         $root = $this->directory;
         $env = $root . '/public/.env';
@@ -118,7 +105,7 @@ final class InitCommand extends Command
         }
     }
 
-    private function getSalts(): ?string
+    public function getSalts(): ?string
     {
         $resource = curl_init();
         curl_setopt($resource, CURLOPT_RETURNTRANSFER, 1);
@@ -162,5 +149,26 @@ final class InitCommand extends Command
             '',
             str_replace(' ', '_', strtolower($name))
         );
+    }
+
+    /**
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     * @throws \Twig\Error\LoaderError
+     */
+    public function generateEnvContents(string $database, string $user, string $password, string $url): string
+    {
+        /** @var TwigTemplater $templater */
+        $templater = $this->container->get(TwigTemplater::class);
+        $salts     = $this->getSalts();
+
+        return $templater->render('env.twig', [
+            'name'     => $database,
+            'user'     => $user,
+            'password' => $password,
+            'url'      => $url,
+            'salts'    => $salts,
+            'debug'    => 'true',
+        ]);
     }
 }
