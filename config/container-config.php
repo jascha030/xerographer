@@ -26,16 +26,16 @@ return [
      * Questions
      */
     'command.init.questions.user' => static function () {
-        return new Question('Enter mysql username');
+        return new Question('Enter mysql username: ');
     },
     'command.init.questions.password' => static function () {
-        $question = new Question('Password');
+        $question = new Question('Password: ');
         $question->setHidden(true);
         $question->setHiddenFallback(false);
 
         return $question;
     },
     'command.init.questions.url' => static function () {
-        return new Question('Enter url domain name (without domain extension) https://');
+        return new Question('Enter url domain name: ');
     }
 ];
