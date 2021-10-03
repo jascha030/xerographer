@@ -51,7 +51,8 @@ class DatabaseService implements DatabaseServiceInterface
      */
     public function createDatabase(string $name): void
     {
-        $this->connection
+        $this->connect()
+            ->connection
             ->createSchemaManager()
             ->createDatabase($name);
     }
