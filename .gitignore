@@ -1,3 +1,9 @@
+# Jetbrains
 /.idea/
+
+# Composer
 /vendor/
+
+# MacOS
+**.DS_Store
 
