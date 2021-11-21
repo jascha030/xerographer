@@ -38,8 +38,6 @@ class WPConfigStoreTest extends TestCase
         WPConfigStore::create([]);
     }
 
-
-
     /**
      * @depends testCreate
      */
@@ -115,6 +113,13 @@ class WPConfigStoreTest extends TestCase
         self::assertFalse(WPConfigStore::has('TEST_CONSTANT'));
     }
 
+    /**
+     * @depends testCreate
+     * @depends testHas
+     * @depends testAdd
+     * @depends testGet
+     * @depends testUnset
+     */
     public function testSave(): void
     {
         // Assert constants are not yet set.
