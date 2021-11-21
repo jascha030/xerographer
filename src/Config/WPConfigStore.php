@@ -4,12 +4,21 @@ namespace Jascha030\Xerox\Config;
 
 final class WPConfigStore
 {
+    public const REQUIRED_VALUES = [
+        'DB_NAME',
+        'DB_USER',
+        'DB_PASSWORD',
+        'WP_HOME',
+        'WP_DEBUG'
+    ];
+
     public const BOOLEAN_VALUES = [
         'AUTOMATIC_UPDATER_DISABLED',
         'DISABLE_WP_CRON',
         'DISALLOW_FILE_EDIT',
         'DISALLOW_FILE_MODS',
         'WP_POST_REVISIONS',
+        'WP_DEBUG'
     ];
 
     public static array $store;
@@ -51,10 +60,6 @@ final class WPConfigStore
 
     private static function define(string $key, $value): void
     {
-        if (in_array($key, self::BOOLEAN_VALUES)) {
-            $value = in_array($value, ['true', '1', 'yes', 'y', 'enabled'], true);
-        }
-
         defined($key) || define($key, $value);
     }
 
