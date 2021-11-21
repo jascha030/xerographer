@@ -27,8 +27,9 @@ class InitCommandTest extends TestCase
     /**
      * @depends test__construct
      */
-    public function testSanitizeDatabaseName(InitCommand $init)
+    public function testSanitizeDatabaseName(InitCommand $init): void
     {
+        self::assertEquals('testdb', $init->sanitizeDatabaseName('test db'));
     }
 
     /**
