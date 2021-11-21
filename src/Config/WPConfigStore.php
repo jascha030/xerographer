@@ -58,6 +58,17 @@ final class WPConfigStore
         return isset(self::$store[$key]);
     }
 
+    public static function unset(string $key): bool
+    {
+        if (! self::has($key)) {
+            return false;
+        }
+
+        unset(self::$store[$key]);
+
+        return true;
+    }
+
     private static function define(string $key, $value): void
     {
         defined($key) || define($key, $value);
@@ -69,8 +80,16 @@ final class WPConfigStore
             if (defined($key) && constant($key) !== $value) {
                 throw new \RuntimeException("Trying to define already defined constant: \"{$key}\".");
             }
+        }
 
+        foreach (self::$store as $key => $value) {
             self::define($key, $value);
+        }
+
+        foreach (self::REQUIRED_VALUES as $key) {
+            if (!isset(self::$store[$key])) {
+                throw new \RuntimeException("Can't initialize WP without required wp-config value: \"{$key}\".");
+            }
         }
     }
 }

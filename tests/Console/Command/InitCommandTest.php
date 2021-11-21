@@ -2,6 +2,7 @@
 
 namespace Jascha030\Xerox\Tests\Console\Command;
 
+use Exception;
 use Jascha030\Xerox\Console\Command\InitCommand;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Command\Command;
@@ -9,9 +10,9 @@ use Symfony\Component\Console\Command\Command;
 class InitCommandTest extends TestCase
 {
     /**
-     * @throws \Exception
+     * @throws Exception
      */
-    public function test__construct(): InitCommand
+    public function testConstruct(): InitCommand
     {
         require_once dirname(__FILE__, 4) . '/includes/bootstrap.php';
 
@@ -25,14 +26,15 @@ class InitCommandTest extends TestCase
     }
 
     /**
-     * @depends test__construct
+     * @depends testConstruct
      */
-    public function testSanitizeDatabaseName(InitCommand $init)
+    public function testSanitizeDatabaseName(InitCommand $init): void
     {
+        self::assertEquals('testdb', $init->sanitizeDatabaseName('test db'));
     }
 
     /**
-     * @depends test__construct
+     * @depends testConstruct
      */
     public function testGetSalts(InitCommand $init): void
     {

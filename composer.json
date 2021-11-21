@@ -38,5 +38,8 @@
   },
   "bin": [
     "bin/xerographer"
-  ]
+  ],
+  "scripts": {
+    "phpunit": "vendor/bin/phpunit"
+  }
 }
