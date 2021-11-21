@@ -3,6 +3,9 @@
 namespace Jascha030\Xerox\Twig;
 
 use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 class TwigTemplater
 {
@@ -19,7 +22,7 @@ class TwigTemplater
     }
 
     /**
-     * @throws \Twig\Error\SyntaxError | \Twig\Error\RuntimeError | \Twig\Error\LoaderError
+     * @throws SyntaxError | RuntimeError | LoaderError
      */
     public function render(string $template, array $context = []): string
     {
