@@ -7,5 +7,21 @@ use PHPUnit\Framework\TestCase;
 
 class XerographerTest extends TestCase
 {
+    public function testGetConfigurationFiles(): void
+    {
+        $configDir = dirname(__DIR__) . '/config';
+        $dirs      = Xerographer::getConfigurationFiles();
 
+        self::assertEquals(
+            [
+                'console' => "{$configDir}/console.php",
+                'twig'    => "{$configDir}/twig.php"
+            ],
+            $dirs
+        );
+
+        foreach ($dirs as $filename) {
+            self::assertFileExists($filename);
+        }
+    }
 }
