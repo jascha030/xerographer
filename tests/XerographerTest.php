@@ -14,8 +14,8 @@ class XerographerTest extends TestCase
 
         self::assertEquals(
             [
-                'console' => "{$configDir}/console.php",
-                'twig'    => "{$configDir}/twig.php"
+                "{$configDir}/console.php",
+                "{$configDir}/twig.php"
             ],
             $dirs
         );

@@ -17,12 +17,14 @@ require_once __DIR__ . '/loader.php';
 $containerBuilder = new ContainerBuilder(Container::class);
 
 /**
- * Add Container definition, config files.
+ * Add Container definition config files.
  */
-$containerBuilder->addDefinitions(Xerographer::getConfigurationFiles());
+foreach(Xerographer::getConfigurationFiles() as $definitionFile) {
+    $containerBuilder->addDefinitions($definitionFile);
+}
 
 /**
- * Set Container settings, for Application.
+ * Set Container settings, for the console Application.
  */
 $containerBuilder->useAutowiring(false);
 $containerBuilder->useAnnotations(false);
