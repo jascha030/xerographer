@@ -5,5 +5,7 @@
 /vendor/
 
 # MacOS
-**.DS_Store
+**/.DS_Store
 
+# Php cache files
+**.cache
