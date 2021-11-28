@@ -8,14 +8,13 @@ use PHPUnit\Framework\TestCase;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
-class TwigTemplaterTest extends TestCase
+final class TwigTemplaterTest extends TestCase
 {
     public function testConstruct(): TemplaterInterface
     {
         $fileSystem  = new FilesystemLoader(dirname(__DIR__) . '/Fixtures/Twig');
         $environment = new Environment($fileSystem);
-
-        $templater = new TwigTemplater($environment);
+        $templater   = new TwigTemplater($environment);
 
         self::assertInstanceOf(TemplaterInterface::class, $templater);
 
