@@ -40,6 +40,10 @@
     "bin/xerographer"
   ],
   "scripts": {
+    "init-env": "php -r \"copy('tests/.env.example', 'tests/.env');\"",
+    "post-root-package-install": [
+      "@init-env"
+    ],
     "phpunit": "vendor/bin/phpunit"
   }
 }
