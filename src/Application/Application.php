@@ -19,7 +19,7 @@ final class Application extends ConsoleApplication
         parent::__construct(Xerographer::APP_NAME, Xerographer::APP_VERSION);
     }
 
-    public function init(): void
+    public function addXerographerCommands(): void
     {
         foreach (Xerographer::APP_COMMANDS as $class) {
             $this->add(new $class($this->container));
@@ -31,7 +31,7 @@ final class Application extends ConsoleApplication
      */
     public function run(InputInterface $input = null, OutputInterface $output = null): int
     {
-        $this->init();
+        $this->addXerographerCommands();
 
         return parent::run($input, $output);
     }
