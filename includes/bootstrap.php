@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use DI\Container;
 use DI\ContainerBuilder;
+use Jascha030\Xerox\Xerographer;
 
 /**
  * Loader loads autoload.php, locally or from $HOME/.composer/vendor/autoload.php.
@@ -18,10 +19,7 @@ $containerBuilder = new ContainerBuilder(Container::class);
 /**
  * Add Container definition, config files.
  */
-$containerBuilder->addDefinitions([
-    dirname(__DIR__) . '/config/console.php',
-    dirname(__DIR__) . '/config/twig.php'
-]);
+$containerBuilder->addDefinitions(Xerographer::getConfigurationFiles());
 
 /**
  * Set Container settings, for Application.

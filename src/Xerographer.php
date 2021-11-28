@@ -33,8 +33,8 @@ final class Xerographer
         $configDir = dirname(__DIR__) . '/config';
 
         return [
-            "{$configDir}/console.php",
-            "{$configDir}/twig.php"
+            'console' => "{$configDir}/console.php",
+            'twig'    => "{$configDir}/twig.php"
         ];
     }
 }
