@@ -5,6 +5,8 @@ namespace Jascha030\Xerox\Application;
 use Jascha030\Xerox\Xerographer;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Application as ConsoleApplication;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 final class Application extends ConsoleApplication
 {
@@ -22,5 +24,15 @@ final class Application extends ConsoleApplication
         foreach (Xerographer::APP_COMMANDS as $class) {
             $this->add(new $class($this->container));
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function run(InputInterface $input = null, OutputInterface $output = null): int
+    {
+        $this->init();
+
+        return parent::run($input, $output);
     }
 }
