@@ -9,3 +9,6 @@
 
 # Php cache files
 **.cache
+
+# Testing .env
+/tests/.env
