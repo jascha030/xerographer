@@ -1,26 +1,38 @@
 <?php
 
+declare(strict_types=1);
+
 use DI\Container;
 use DI\ContainerBuilder;
-use Psr\Container\ContainerInterface;
 
+/**
+ * Loader loads autoload.php, locally or from $HOME/.composer/vendor/autoload.php.
+ */
 require_once __DIR__ . '/loader.php';
 
 /**
- * @throws \Exception
+ * Create ContainerBuilder.
  */
-function getContainer(): ContainerInterface
-{
-    static $container;
+$containerBuilder = new ContainerBuilder(Container::class);
 
-    if (!isset($container)) {
-        $containerBuilder = new ContainerBuilder(Container::class);
-        $containerBuilder->addDefinitions(dirname(__DIR__) . '/config/container-config.php');
-        $containerBuilder->useAutowiring(false);
-        $containerBuilder->useAnnotations(false);
+/**
+ * Add Container definition, config files.
+ */
+$containerBuilder->addDefinitions([
+    dirname(__DIR__) . '/config/console.php',
+    dirname(__DIR__) . '/config/twig.php'
+]);
 
-        $container = $containerBuilder->build();
-    }
+/**
+ * Set Container settings, for Application.
+ */
+$containerBuilder->useAutowiring(false);
+$containerBuilder->useAnnotations(false);
 
-    return $container;
-}
+/**
+ * Build and return Container.
+ *
+ * @noinspection PhpUnhandledExceptionInspection
+ * @return Container
+ */
+return $containerBuilder->build();
