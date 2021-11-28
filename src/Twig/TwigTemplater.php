@@ -7,7 +7,7 @@ use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 
-class TwigTemplater
+class TwigTemplater implements TemplaterInterface
 {
     private Environment $environment;
 
@@ -26,6 +26,8 @@ class TwigTemplater
      */
     public function render(string $template, array $context = []): string
     {
-        return $this->getEnvironment()->render($template, $context);
+        return $this
+            ->getEnvironment()
+            ->render($template, $context);
     }
 }
