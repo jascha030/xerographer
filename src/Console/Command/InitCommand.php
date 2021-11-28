@@ -20,6 +20,7 @@ use Twig\Error\SyntaxError;
 final class InitCommand extends Command
 {
     private const SALTS_URL   = "https://api.wordpress.org/secret-key/1.1/salt";
+
     private const CONST_REGEX = "/define\('([A-Z_]*)',[ \t]*'(.*)'\);/";
 
     private bool $production;
@@ -28,9 +29,10 @@ final class InitCommand extends Command
 
     private ContainerInterface $container;
 
-    public function __construct(ContainerInterface $container) {
-        $this->container = $container;
-        $this->directory = getcwd();
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container  = $container;
+        $this->directory  = getcwd();
         $this->production = false;
 
         parent::__construct('init');
@@ -45,10 +47,10 @@ final class InitCommand extends Command
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->production = $input->getOption('production');
-        $name     = $this->ask($input, $output, 'name');
-        $database = $this->sanitizeDatabaseName($name);
-        $user     = $this->ask($input, $output, 'user');
-        $password = $this->ask($input, $output, 'password');
+        $name             = $this->ask($input, $output, 'name');
+        $database         = $this->sanitizeDatabaseName($name);
+        $user             = $this->ask($input, $output, 'user');
+        $password         = $this->ask($input, $output, 'password');
 
         $output->writeln('Creating database...');
 
@@ -63,7 +65,7 @@ final class InitCommand extends Command
         $url = $this->ask($input, $output, 'url');
 
         try {
-            $this->generateDotEnv($database, $user, $password, 'https://' . $url . '.test');
+            $this->generateDotEnv($database, $user, $password, 'https://' . $url . '.test', $this->getSalts());
         } catch (LoaderError | RuntimeError | SyntaxError $e) {
             $output->writeln($e->getMessage());
 
@@ -75,38 +77,38 @@ final class InitCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function valetLink(string $domain, OutputInterface $output): void
+    public function sanitizeDatabaseName(string $name): string
     {
-        $callback = static function ($type, $buffer) use ($output) {
-            $output->writeln($buffer);
-        };
-
-        $link = Process::fromShellCommandline("valet link {$domain}");
-        $link->setWorkingDirectory($this->directory . '/public');
-        $link->run($callback);
-
-        $secure = Process::fromShellCommandline('valet secure');
-        $secure->setWorkingDirectory($this->directory . '/public');
-        $secure->run($callback);
+        return preg_replace(
+            '/[^A-Za-z0-9\-]/',
+            '',
+            str_replace(' ', '_', strtolower($name))
+        );
     }
 
     /**
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
-     * @throws \Twig\Error\LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     * @throws LoaderError
      */
-    private function generateDotEnv(string $database, string $user, string $password, string $url): void
+    public function generateEnvContents(string $database, string $user, string $password, string $url, string $salts): string
     {
-        $envString = $this->generateEnvContents($database, $user, $password, $url);
+        /** @var TwigTemplater $templater */
+        $templater = $this->container->get(TwigTemplater::class);
 
-        $root = $this->directory;
-        $env = $root . '/public/.env';
-
-        if (!file_exists($env)) {
-            (new Filesystem())->touch($env);
-
-            file_put_contents($env, $envString);
-        }
+        return $templater->render(
+            'env.twig',
+            [
+                'name'     => $database,
+                'user'     => $user,
+                'password' => $password,
+                'url'      => $url,
+                'salts'    => $salts,
+                'debug'    => $this->production
+                    ? 'false'
+                    : 'true',
+            ]
+        );
     }
 
     public function getSalts(): ?string
@@ -134,9 +136,36 @@ final class InitCommand extends Command
         return null;
     }
 
-    private function getQuestion(string $question): Question
+    /**
+     * @throws RuntimeError
+     * @throws SyntaxError
+     * @throws LoaderError
+     */
+    private function generateDotEnv(string $database, string $user, string $password, string $url, string $salts): void
     {
-        return $this->container->get('command.init.questions.' . $question);
+        $envString = $this->generateEnvContents($database, $user, $password, $url, $salts);
+        $env       = "{$this->directory}/public/.env";
+
+        if (! file_exists($env)) {
+            (new Filesystem())->touch($env);
+
+            file_put_contents($env, $envString);
+        }
+    }
+
+    private function valetLink(string $domain, OutputInterface $output): void
+    {
+        $callback = static function ($type, $buffer) use ($output) {
+            $output->writeln($buffer);
+        };
+
+        $link = Process::fromShellCommandline("valet link {$domain}");
+        $link->setWorkingDirectory($this->directory . '/public');
+        $link->run($callback);
+
+        $secure = Process::fromShellCommandline('valet secure');
+        $secure->setWorkingDirectory($this->directory . '/public');
+        $secure->run($callback);
     }
 
     private function ask(InputInterface $input, OutputInterface $output, string $questionIdentifier)
@@ -146,33 +175,8 @@ final class InitCommand extends Command
         return $questionHelper->ask($input, $output, $this->getQuestion($questionIdentifier));
     }
 
-    public function sanitizeDatabaseName(string $name): string
+    private function getQuestion(string $question): Question
     {
-        return preg_replace(
-            '/[^A-Za-z0-9\-]/',
-            '',
-            str_replace(' ', '_', strtolower($name))
-        );
-    }
-
-    /**
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
-     * @throws \Twig\Error\LoaderError
-     */
-    public function generateEnvContents(string $database, string $user, string $password, string $url): string
-    {
-        /** @var TwigTemplater $templater */
-        $templater = $this->container->get(TwigTemplater::class);
-        $salts     = $this->getSalts();
-
-        return $templater->render('env.twig', [
-            'name'     => $database,
-            'user'     => $user,
-            'password' => $password,
-            'url'      => $url,
-            'salts'    => $salts,
-            'debug'    => $this->production ? 'false': 'true',
-        ]);
+        return $this->container->get('command.init.questions.' . $question);
     }
 }
