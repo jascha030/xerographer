@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jascha030\Xerox\Tests\Database;
 
 use Doctrine\DBAL\Connection;
@@ -11,7 +13,7 @@ use Jascha030\Xerox\Database\DatabaseServiceInterface;
 use Jascha030\Xerox\Tests\TestDotEnvTrait;
 use PHPUnit\Framework\TestCase;
 
-class DatabaseServiceTest extends TestCase
+final class DatabaseServiceTest extends TestCase
 {
     use TestDotEnvTrait;
 
