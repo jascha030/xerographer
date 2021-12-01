@@ -2,13 +2,31 @@
 
 namespace Jascha030\Xerox\Tests\Console\Command;
 
+use Dotenv\Dotenv;
 use Exception;
+use Jascha030\Xerox\Application\Application;
 use Jascha030\Xerox\Console\Command\InitCommand;
+use Jascha030\Xerox\Database\DatabaseService;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Filesystem\Filesystem;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 final class InitCommandTest extends TestCase
 {
+    private const TEST_VALUES = [
+        'DB_NAME'     => 'testdb',
+        'DB_USER'     => 'user',
+        'DB_PASSWORD' => 'test_password',
+        'WP_HOME'     => 'https://example.test',
+        'SALTS'       => 'SALTS="test"',
+        'WP_DEBUG'    => true,
+    ];
+
     private const WP_CONFIG_CONSTANTS = [
         'AUTH_KEY',
         'SECURE_AUTH_KEY',
@@ -20,13 +38,35 @@ final class InitCommandTest extends TestCase
         'NONCE_SALT',
     ];
 
+    private string $projectName;
+
+    private string $projectDir;
+
+    private Filesystem $fileSystem;
+
+    public function setUp(): void
+    {
+        $this->fileSystem = new Filesystem();
+        $this->projectDir = dirname(__FILE__, 3) . '/Fixtures/testproject';
+
+        $this->cleanTestProject();
+
+        parent::setUp();
+    }
+
+    public function tearDown(): void
+    {
+        $this->cleanTestProject();
+
+        parent::tearDown();
+    }
+
     /**
      * @throws Exception
      */
     public function testConstruct(): InitCommand
     {
-        $container = include dirname(__FILE__, 4) . '/includes/bootstrap.php';
-        $command   = new InitCommand($container);
+        $command = new InitCommand($this->getContainer());
 
         self::assertInstanceOf(Command::class, $command);
         self::assertInstanceOf(InitCommand::class, $command);
@@ -51,17 +91,17 @@ final class InitCommandTest extends TestCase
     /**
      * @depends testConstruct
      */
-    public function testSanitizeDatabaseName(InitCommand $init): void
+    public function testSanitizeDatabaseName(InitCommand $command): void
     {
-        self::assertEquals('testdb', $init->sanitizeDatabaseName('test db'));
+        self::assertEquals('testdb', $command->sanitizeDatabaseName('test db'));
     }
 
     /**
      * @depends testConstruct
      */
-    public function testGetSalts(InitCommand $init): void
+    public function testGetSalts(InitCommand $command): void
     {
-        $salts = $init->getSalts();
+        $salts = $command->getSalts();
 
         self::assertIsString($salts);
 
@@ -78,5 +118,85 @@ final class InitCommandTest extends TestCase
         }
 
         self::assertEquals(self::WP_CONFIG_CONSTANTS, $constants);
+    }
+
+    /**
+     * @depends testConstruct
+     *
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function testGenerateEnvContents(InitCommand $command): void
+    {
+        $testEnv  = dirname(__FILE__, 3) . '/Fixtures/Templates/test.env';
+        $contents = $command->generateEnvContents(...array_values(self::TEST_VALUES));
+
+        $testAgainst = file_get_contents($testEnv);
+
+        self::assertEquals($testAgainst, $contents);
+    }
+
+    /**
+     * @depends testConstruct
+     * @depends testConfigure
+     * @depends testSanitizeDatabaseName
+     * @depends testGetSalts
+     * @depends testGenerateEnvContents
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function testExecute(InitCommand $command): void
+    {
+        $env               = $this->getDotEnv();
+        $this->projectName = uniqid('unittest', true);
+        $command->setApplication($this->getApplication());
+
+        $commandTester = new CommandTester($command);
+        $commandTester->setInputs([
+            $this->projectName,
+            $env['DB_USER'],
+            $env['DB_PASSWORD'],
+            $this->projectName,
+            $env['ROOT_PASSWORD']
+        ]);
+
+        self::assertEquals(0, $commandTester->execute(['command' => $command]));
+        self::assertTrue($this->fileSystem->exists($this->projectDir . '/public/.env'));
+
+        $database = new DatabaseService($env['DB_USER'], $env['DB_PASSWORD']);
+        $database->dropDatabase($this->projectName);
+    }
+
+    private function getContainer(): ContainerInterface
+    {
+        return include dirname(__FILE__, 4) . '/includes/bootstrap.php';
+    }
+
+    private function getApplication(): Application
+    {
+        $app = new Application($this->getContainer());
+        $app->setAutoExit(false);
+
+        return $app;
+    }
+
+    private function getDotEnv(): array
+    {
+        return Dotenv::createMutable(dirname(__FILE__, 3))->load();
+    }
+
+    private function cleanTestProject(): void
+    {
+        if (!isset($this->projectDir)) {
+            $class = __CLASS__;
+
+            throw new \RuntimeException(
+                "`{$class}::cleanTestProject()` can't run before `{$class}::setUp()`."
+            );
+        }
+
+        if ($this->fileSystem->exists($this->projectDir . '/public/.env')) {
+            $this->fileSystem->remove($this->projectDir . '/public/.env');
+        }
     }
 }
