@@ -14,6 +14,8 @@ interface DatabaseServiceInterface
     );
 
     /**
+     * Create a mysql database.
+     *
      * @throws Exception
      */
     public function createDatabase(string $name): void;
