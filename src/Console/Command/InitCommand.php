@@ -172,9 +172,7 @@ final class InitCommand extends Command
         if (! file_exists($env)) {
             (new Filesystem())->touch($env);
 
-            if (! file_put_contents($env, $envString)) {
-                throw new RuntimeException('Could not generate .env from template, check access rights.');
-            }
+            file_put_contents($env, $envString);
         }
     }
 
