@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1638400349">
-  <project timestamp="1638400349">
+<coverage generated="1638400777">
+  <project timestamp="1638400777">
     <file name="/Users/jascha030/.development/Projects/xerox/xerographer/src/Application/Application.php">
       <class name="Jascha030\Xerox\Application\Application" namespace="global">
         <metrics complexity="4" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="8" elements="11" coveredelements="11"/>
@@ -61,7 +61,7 @@
     </file>
     <file name="/Users/jascha030/.development/Projects/xerox/xerographer/src/Console/Command/InitCommand.php">
       <class name="Jascha030\Xerox\Console\Command\InitCommand" namespace="global">
-        <metrics complexity="17" methods="11" coveredmethods="10" conditionals="0" coveredconditionals="0" statements="72" coveredstatements="71" elements="83" coveredelements="81"/>
+        <metrics complexity="16" methods="11" coveredmethods="11" conditionals="0" coveredconditionals="0" statements="70" coveredstatements="70" elements="81" coveredelements="81"/>
       </class>
       <line num="37" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="6"/>
       <line num="39" type="stmt" count="6"/>
@@ -112,41 +112,39 @@
       <line num="122" type="stmt" count="4"/>
       <line num="123" type="stmt" count="1"/>
       <line num="124" type="stmt" count="4"/>
-      <line num="132" type="method" name="getSalts" visibility="public" complexity="3" crap="3.00" count="3"/>
+      <line num="129" type="method" name="getSalts" visibility="public" complexity="2" crap="2" count="3"/>
+      <line num="131" type="stmt" count="3"/>
+      <line num="132" type="stmt" count="3"/>
+      <line num="133" type="stmt" count="3"/>
       <line num="134" type="stmt" count="3"/>
       <line num="135" type="stmt" count="3"/>
-      <line num="136" type="stmt" count="3"/>
       <line num="137" type="stmt" count="3"/>
-      <line num="138" type="stmt" count="3"/>
-      <line num="140" type="stmt" count="3"/>
-      <line num="142" type="stmt" count="3"/>
+      <line num="139" type="stmt" count="3"/>
+      <line num="141" type="stmt" count="3"/>
       <line num="143" type="stmt" count="3"/>
-      <line num="145" type="stmt" count="3"/>
+      <line num="144" type="stmt" count="3"/>
       <line num="147" type="stmt" count="3"/>
-      <line num="148" type="stmt" count="3"/>
-      <line num="151" type="stmt" count="3"/>
-      <line num="154" type="stmt" count="0"/>
-      <line num="157" type="method" name="getQuestionContainer" visibility="protected" complexity="1" crap="1" count="3"/>
-      <line num="159" type="stmt" count="3"/>
-      <line num="167" type="method" name="generateDotEnv" visibility="private" complexity="2" crap="2" count="2"/>
-      <line num="169" type="stmt" count="2"/>
+      <line num="150" type="method" name="getQuestionContainer" visibility="protected" complexity="1" crap="1" count="3"/>
+      <line num="152" type="stmt" count="3"/>
+      <line num="160" type="method" name="generateDotEnv" visibility="private" complexity="2" crap="2" count="2"/>
+      <line num="162" type="stmt" count="2"/>
+      <line num="163" type="stmt" count="1"/>
+      <line num="165" type="stmt" count="1"/>
+      <line num="166" type="stmt" count="1"/>
+      <line num="168" type="stmt" count="1"/>
       <line num="170" type="stmt" count="1"/>
-      <line num="172" type="stmt" count="1"/>
-      <line num="173" type="stmt" count="1"/>
+      <line num="172" type="method" name="valetLink" visibility="private" complexity="1" crap="1" count="1"/>
+      <line num="174" type="stmt" count="1"/>
       <line num="175" type="stmt" count="1"/>
-      <line num="177" type="stmt" count="1"/>
-      <line num="179" type="method" name="valetLink" visibility="private" complexity="1" crap="1" count="1"/>
-      <line num="181" type="stmt" count="1"/>
+      <line num="176" type="stmt" count="1"/>
+      <line num="178" type="stmt" count="1"/>
+      <line num="179" type="stmt" count="1"/>
+      <line num="180" type="stmt" count="1"/>
       <line num="182" type="stmt" count="1"/>
       <line num="183" type="stmt" count="1"/>
+      <line num="184" type="stmt" count="1"/>
       <line num="185" type="stmt" count="1"/>
-      <line num="186" type="stmt" count="1"/>
-      <line num="187" type="stmt" count="1"/>
-      <line num="189" type="stmt" count="1"/>
-      <line num="190" type="stmt" count="1"/>
-      <line num="191" type="stmt" count="1"/>
-      <line num="192" type="stmt" count="1"/>
-      <metrics loc="193" ncloc="180" classes="1" methods="11" coveredmethods="10" conditionals="0" coveredconditionals="0" statements="72" coveredstatements="71" elements="83" coveredelements="81"/>
+      <metrics loc="186" ncloc="176" classes="1" methods="11" coveredmethods="11" conditionals="0" coveredconditionals="0" statements="70" coveredstatements="70" elements="81" coveredelements="81"/>
     </file>
     <file name="/Users/jascha030/.development/Projects/xerox/xerographer/src/Console/Question/AsksConsoleQuestionsTrait.php">
       <class name="Jascha030\Xerox\Console\Question\AsksConsoleQuestionsTrait" namespace="global">
@@ -234,6 +232,6 @@
       <line num="37" type="stmt" count="8"/>
       <metrics loc="40" ncloc="26" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="4" coveredelements="4"/>
     </file>
-    <metrics files="11" loc="560" ncloc="506" classes="7" methods="32" coveredmethods="31" conditionals="0" coveredconditionals="0" statements="144" coveredstatements="143" elements="176" coveredelements="174"/>
+    <metrics files="11" loc="553" ncloc="502" classes="7" methods="32" coveredmethods="32" conditionals="0" coveredconditionals="0" statements="142" coveredstatements="142" elements="174" coveredelements="174"/>
   </project>
 </coverage>
