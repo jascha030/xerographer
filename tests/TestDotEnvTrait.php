@@ -2,7 +2,12 @@
 
 namespace Jascha030\Xerox\Tests;
 
-class TestDotEnvTrait
-{
+use Dotenv\Dotenv;
 
+trait TestDotEnvTrait
+{
+    private function getDotEnv(): array
+    {
+        return Dotenv::createMutable(__DIR__)->load();
+    }
 }
