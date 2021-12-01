@@ -190,6 +190,7 @@ final class InitCommandTest extends TestCase
         $database = new DatabaseService($env['DB_USER'], $env['DB_PASSWORD']);
         $database->dropDatabase("wp_$projectName");
 
+        $this->unlinkPublicDir($projectName);
     }
 
     private function getContainer(): ContainerInterface
@@ -220,6 +221,9 @@ final class InitCommandTest extends TestCase
         }
     }
 
+    /**
+     * Unlink symbolic link created by valet.
+     */
     private function unlinkPublicDir(string $linkedName): void
     {
         $output   = new ConsoleOutput();
