@@ -3,14 +3,17 @@
 namespace Jascha030\Xerox\Console\Command;
 
 use Exception;
+use Jascha030\Xerox\Console\Question\AsksConsoleQuestionsTrait;
 use Jascha030\Xerox\Database\DatabaseService;
+use Jascha030\Xerox\Twig\TemplaterInterface;
 use Jascha030\Xerox\Twig\TwigTemplater;
 use Psr\Container\ContainerInterface;
+use RuntimeException;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use Twig\Error\LoaderError;
@@ -19,6 +22,8 @@ use Twig\Error\SyntaxError;
 
 final class InitCommand extends Command
 {
+    use AsksConsoleQuestionsTrait;
+
     private const SALTS_URL   = "https://api.wordpress.org/secret-key/1.1/salt";
 
     private const CONST_REGEX = "/define\('([A-Z_]*)',[ \t]*'(.*)'\);/";
@@ -42,6 +47,16 @@ final class InitCommand extends Command
     {
         $this->setDescription('Init a new Environment with database.')
              ->addOption('production', 'p', InputOption::VALUE_NONE);
+    }
+
+    public function getQuestionKey(): string
+    {
+        return $this->getName();
+    }
+
+    public function getQuestionHelper(): QuestionHelper
+    {
+        return $this->getHelper('question');
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int
@@ -91,10 +106,29 @@ final class InitCommand extends Command
      * @throws SyntaxError
      * @throws LoaderError
      */
+    private function generateDotEnv(string $database, string $user, string $password, string $url, string $salts): void
+    {
+        $envString = $this->generateEnvContents($database, $user, $password, $url, $salts);
+        $env       = "{$this->directory}/public/.env";
+
+        if (! file_exists($env)) {
+            (new Filesystem())->touch($env);
+
+            if (! file_put_contents($env, $envString)) {
+                throw new RuntimeException('Could not generate .env from template, check access rights.');
+            }
+        }
+    }
+
+    /**
+     * @throws RuntimeError
+     * @throws SyntaxError
+     * @throws LoaderError
+     */
     public function generateEnvContents(string $database, string $user, string $password, string $url, string $salts): string
     {
         /** @var TwigTemplater $templater */
-        $templater = $this->container->get(TwigTemplater::class);
+        $templater = $this->container->get(TemplaterInterface::class);
 
         return $templater->render(
             'env.twig',
@@ -111,6 +145,9 @@ final class InitCommand extends Command
         );
     }
 
+    /**
+     * @todo: think about separation of concerns, does this belong in a Command class?
+     */
     public function getSalts(): ?string
     {
         $resource = curl_init();
@@ -136,21 +173,9 @@ final class InitCommand extends Command
         return null;
     }
 
-    /**
-     * @throws RuntimeError
-     * @throws SyntaxError
-     * @throws LoaderError
-     */
-    private function generateDotEnv(string $database, string $user, string $password, string $url, string $salts): void
+    protected function getQuestionContainer(): ContainerInterface
     {
-        $envString = $this->generateEnvContents($database, $user, $password, $url, $salts);
-        $env       = "{$this->directory}/public/.env";
-
-        if (! file_exists($env)) {
-            (new Filesystem())->touch($env);
-
-            file_put_contents($env, $envString);
-        }
+        return $this->container;
     }
 
     private function valetLink(string $domain, OutputInterface $output): void
@@ -166,17 +191,5 @@ final class InitCommand extends Command
         $secure = Process::fromShellCommandline('valet secure');
         $secure->setWorkingDirectory($this->directory . '/public');
         $secure->run($callback);
-    }
-
-    private function ask(InputInterface $input, OutputInterface $output, string $questionIdentifier)
-    {
-        $questionHelper = $this->getHelper('question');
-
-        return $questionHelper->ask($input, $output, $this->getQuestion($questionIdentifier));
-    }
-
-    private function getQuestion(string $question): Question
-    {
-        return $this->container->get('command.init.questions.' . $question);
     }
 }

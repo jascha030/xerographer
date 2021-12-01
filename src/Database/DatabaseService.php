@@ -6,7 +6,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Exception;
 
-class DatabaseService implements DatabaseServiceInterface
+class DatabaseService implements DatabaseServiceInterface, DatabaseRemovalInterface
 {
     private string $user;
 
@@ -31,23 +31,8 @@ class DatabaseService implements DatabaseServiceInterface
     }
 
     /**
-     * @throws Exception
-     */
-    private function connect(): DatabaseServiceInterface
-    {
-        $params = [
-            'user'     => $this->user,
-            'password' => $this->password,
-            'host'     => $this->host,
-            'driver'   => $this->driver,
-        ];
-
-        $this->connection = DriverManager::getConnection($params);
-
-        return $this;
-    }
-
-    /**
+     * {@inheritdoc}
+     *
      * @throws Exception
      */
     public function createDatabase(string $name): void
@@ -65,6 +50,7 @@ class DatabaseService implements DatabaseServiceInterface
     }
 
     /**
+     * {@inheritdoc}
      * @throws Exception
      */
     public function dropDatabase(string $name): void
@@ -75,5 +61,22 @@ class DatabaseService implements DatabaseServiceInterface
             ->dropDatabase($name);
 
         $this->connection->close();
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function connect(): DatabaseServiceInterface
+    {
+        $params = [
+            'user'     => $this->user,
+            'password' => $this->password,
+            'host'     => $this->host,
+            'driver'   => $this->driver,
+        ];
+
+        $this->connection = DriverManager::getConnection($params);
+
+        return $this;
     }
 }
