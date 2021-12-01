@@ -1,5 +1,6 @@
 <?php
 
+use Jascha030\Xerox\Twig\TemplaterInterface;
 use Jascha030\Xerox\Twig\TwigTemplater;
 use Psr\Container\ContainerInterface;
 use Twig\Environment;
@@ -17,7 +18,7 @@ return [
     Environment::class => static function (ContainerInterface $c) {
         return new Environment($c->get(LoaderInterface::class));
     },
-    TwigTemplater::class => static function (ContainerInterface $c) {
+    TemplaterInterface::class => static function (ContainerInterface $c) {
         return new TwigTemplater($c->get(Environment::class));
     },
 ];
