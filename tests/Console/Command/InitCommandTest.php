@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Jascha030\Xerox\Tests\Console\Command;
 
-use Dotenv\Dotenv;
 use Exception;
 use Jascha030\Xerox\Application\Application;
 use Jascha030\Xerox\Console\Command\InitCommand;
@@ -13,8 +12,11 @@ use Jascha030\Xerox\Tests\TestDotEnvTrait;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Process\Process;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
@@ -94,6 +96,23 @@ final class InitCommandTest extends TestCase
     /**
      * @depends testConstruct
      */
+    public function testGetQuestionKey(InitCommand $command): void
+    {
+        self::assertEquals('init', $command->getQuestionKey());
+    }
+
+    /**
+     * @depends testConstruct
+     */
+    public function testGetQuestionHelper(InitCommand $command): void
+    {
+        /** @noinspection UnnecessaryAssertionInspection */
+        self::assertInstanceOf(QuestionHelper::class, $command->getQuestionHelper());
+    }
+
+    /**
+     * @depends testConstruct
+     */
     public function testSanitizeDatabaseName(InitCommand $command): void
     {
         self::assertEquals('testdb', $command->sanitizeDatabaseName('test db'));
@@ -168,6 +187,7 @@ final class InitCommandTest extends TestCase
 
         $database = new DatabaseService($env['DB_USER'], $env['DB_PASSWORD']);
         $database->dropDatabase("wp_$projectName");
+
     }
 
     private function getContainer(): ContainerInterface
@@ -196,5 +216,17 @@ final class InitCommandTest extends TestCase
         if ($this->fileSystem->exists($this->projectDir . '/public/.env')) {
             $this->fileSystem->remove($this->projectDir . '/public/.env');
         }
+    }
+
+    private function unlinkPublicDir(string $linkedName): void
+    {
+        $output   = new ConsoleOutput();
+        $callback = static function ($type, $buffer) use ($output) {
+            $output->writeln($buffer);
+        };
+
+        $link = Process::fromShellCommandline("valet unlink {$linkedName}");
+        $link->setWorkingDirectory($this->projectDir . '/public');
+        $link->run($callback);
     }
 }
