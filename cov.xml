@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1638387272">
+  <project timestamp="1638387272">
+    <file name="/Users/jascha030/.development/Projects/xerox/xerox/src/Application/Application.php">
+      <class name="Jascha030\Xerox\Application\Application" namespace="global">
+        <metrics complexity="4" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="8" elements="11" coveredelements="11"/>
+      </class>
+      <line num="15" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="2"/>
+      <line num="17" type="stmt" count="2"/>
+      <line num="19" type="stmt" count="2"/>
+      <line num="20" type="stmt" count="2"/>
+      <line num="22" type="method" name="addXerographerCommands" visibility="public" complexity="2" crap="2" count="2"/>
+      <line num="24" type="stmt" count="2"/>
+      <line num="25" type="stmt" count="2"/>
+      <line num="27" type="stmt" count="2"/>
+      <line num="32" type="method" name="run" visibility="public" complexity="1" crap="1" count="1"/>
+      <line num="34" type="stmt" count="1"/>
+      <line num="36" type="stmt" count="1"/>
+      <metrics loc="38" ncloc="35" classes="1" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="8" elements="11" coveredelements="11"/>
+    </file>
+    <file name="/Users/jascha030/.development/Projects/xerox/xerox/src/Config/WPConfigStore.php">
+      <class name="Jascha030\Xerox\Config\WPConfigStore" namespace="global">
+        <metrics complexity="19" methods="8" coveredmethods="8" conditionals="0" coveredconditionals="0" statements="27" coveredstatements="27" elements="35" coveredelements="35"/>
+      </class>
+      <line num="26" type="method" name="__construct" visibility="private" complexity="1" crap="1" count="1"/>
+      <line num="28" type="stmt" count="1"/>
+      <line num="29" type="stmt" count="1"/>
+      <line num="31" type="method" name="create" visibility="public" complexity="2" crap="2" count="2"/>
+      <line num="33" type="stmt" count="2"/>
+      <line num="35" type="stmt" count="2"/>
+      <line num="36" type="stmt" count="1"/>
+      <line num="39" type="stmt" count="1"/>
+      <line num="42" type="method" name="get" visibility="public" complexity="2" crap="2" count="4"/>
+      <line num="44" type="stmt" count="4"/>
+      <line num="45" type="stmt" count="1"/>
+      <line num="48" type="stmt" count="3"/>
+      <line num="51" type="method" name="add" visibility="public" complexity="2" crap="2" count="3"/>
+      <line num="53" type="stmt" count="3"/>
+      <line num="54" type="stmt" count="3"/>
+      <line num="56" type="method" name="has" visibility="public" complexity="1" crap="1" count="6"/>
+      <line num="58" type="stmt" count="6"/>
+      <line num="61" type="method" name="unset" visibility="public" complexity="2" crap="2" count="2"/>
+      <line num="63" type="stmt" count="2"/>
+      <line num="64" type="stmt" count="1"/>
+      <line num="67" type="stmt" count="2"/>
+      <line num="69" type="stmt" count="2"/>
+      <line num="72" type="method" name="define" visibility="private" complexity="2" crap="2" count="1"/>
+      <line num="74" type="stmt" count="1"/>
+      <line num="75" type="stmt" count="1"/>
+      <line num="77" type="method" name="save" visibility="public" complexity="7" crap="7" count="1"/>
+      <line num="79" type="stmt" count="1"/>
+      <line num="80" type="stmt" count="1"/>
+      <line num="81" type="stmt" count="1"/>
+      <line num="85" type="stmt" count="1"/>
+      <line num="86" type="stmt" count="1"/>
+      <line num="89" type="stmt" count="1"/>
+      <line num="90" type="stmt" count="1"/>
+      <line num="91" type="stmt" count="1"/>
+      <line num="94" type="stmt" count="1"/>
+      <metrics loc="95" ncloc="95" classes="1" methods="8" coveredmethods="8" conditionals="0" coveredconditionals="0" statements="27" coveredstatements="27" elements="35" coveredelements="35"/>
+    </file>
+    <file name="/Users/jascha030/.development/Projects/xerox/xerox/src/Console/Command/InitCommand.php">
+      <class name="Jascha030\Xerox\Console\Command\InitCommand" namespace="global">
+        <metrics complexity="16" methods="10" coveredmethods="7" conditionals="0" coveredconditionals="0" statements="72" coveredstatements="64" elements="82" coveredelements="71"/>
+      </class>
+      <line num="32" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="3"/>
+      <line num="34" type="stmt" count="3"/>
+      <line num="35" type="stmt" count="3"/>
+      <line num="36" type="stmt" count="3"/>
+      <line num="38" type="stmt" count="3"/>
+      <line num="39" type="stmt" count="3"/>
+      <line num="41" type="method" name="configure" visibility="public" complexity="1" crap="1" count="4"/>
+      <line num="43" type="stmt" count="4"/>
+      <line num="44" type="stmt" count="4"/>
+      <line num="45" type="stmt" count="4"/>
+      <line num="47" type="method" name="execute" visibility="public" complexity="3" crap="3.40" count="1"/>
+      <line num="49" type="stmt" count="1"/>
+      <line num="50" type="stmt" count="1"/>
+      <line num="51" type="stmt" count="1"/>
+      <line num="52" type="stmt" count="1"/>
+      <line num="53" type="stmt" count="1"/>
+      <line num="55" type="stmt" count="1"/>
+      <line num="58" type="stmt" count="1"/>
+      <line num="59" type="stmt" count="0"/>
+      <line num="60" type="stmt" count="0"/>
+      <line num="62" type="stmt" count="0"/>
+      <line num="65" type="stmt" count="1"/>
+      <line num="68" type="stmt" count="1"/>
+      <line num="69" type="stmt" count="0"/>
+      <line num="70" type="stmt" count="0"/>
+      <line num="72" type="stmt" count="0"/>
+      <line num="75" type="stmt" count="1"/>
+      <line num="77" type="stmt" count="1"/>
+      <line num="80" type="method" name="sanitizeDatabaseName" visibility="public" complexity="1" crap="1" count="2"/>
+      <line num="82" type="stmt" count="2"/>
+      <line num="83" type="stmt" count="2"/>
+      <line num="84" type="stmt" count="2"/>
+      <line num="85" type="stmt" count="2"/>
+      <line num="94" type="method" name="generateEnvContents" visibility="public" complexity="2" crap="2.00" count="2"/>
+      <line num="97" type="stmt" count="2"/>
+      <line num="99" type="stmt" count="2"/>
+      <line num="100" type="stmt" count="2"/>
+      <line num="102" type="stmt" count="2"/>
+      <line num="103" type="stmt" count="2"/>
+      <line num="104" type="stmt" count="2"/>
+      <line num="105" type="stmt" count="2"/>
+      <line num="106" type="stmt" count="2"/>
+      <line num="107" type="stmt" count="2"/>
+      <line num="108" type="stmt" count="0"/>
+      <line num="109" type="stmt" count="2"/>
+      <line num="114" type="method" name="getSalts" visibility="public" complexity="3" crap="3.00" count="2"/>
+      <line num="116" type="stmt" count="2"/>
+      <line num="117" type="stmt" count="2"/>
+      <line num="118" type="stmt" count="2"/>
+      <line num="119" type="stmt" count="2"/>
+      <line num="120" type="stmt" count="2"/>
+      <line num="122" type="stmt" count="2"/>
+      <line num="124" type="stmt" count="2"/>
+      <line num="125" type="stmt" count="2"/>
+      <line num="127" type="stmt" count="2"/>
+      <line num="129" type="stmt" count="2"/>
+      <line num="130" type="stmt" count="2"/>
+      <line num="133" type="stmt" count="2"/>
+      <line num="136" type="stmt" count="0"/>
+      <line num="144" type="method" name="generateDotEnv" visibility="private" complexity="2" crap="2" count="1"/>
+      <line num="146" type="stmt" count="1"/>
+      <line num="147" type="stmt" count="1"/>
+      <line num="149" type="stmt" count="1"/>
+      <line num="150" type="stmt" count="1"/>
+      <line num="152" type="stmt" count="1"/>
+      <line num="154" type="stmt" count="1"/>
+      <line num="156" type="method" name="valetLink" visibility="private" complexity="1" crap="1" count="1"/>
+      <line num="158" type="stmt" count="1"/>
+      <line num="159" type="stmt" count="1"/>
+      <line num="160" type="stmt" count="1"/>
+      <line num="162" type="stmt" count="1"/>
+      <line num="163" type="stmt" count="1"/>
+      <line num="164" type="stmt" count="1"/>
+      <line num="166" type="stmt" count="1"/>
+      <line num="167" type="stmt" count="1"/>
+      <line num="168" type="stmt" count="1"/>
+      <line num="169" type="stmt" count="1"/>
+      <line num="171" type="method" name="ask" visibility="private" complexity="1" crap="1" count="1"/>
+      <line num="173" type="stmt" count="1"/>
+      <line num="175" type="stmt" count="1"/>
+      <line num="178" type="method" name="getQuestion" visibility="private" complexity="1" crap="1" count="1"/>
+      <line num="180" type="stmt" count="1"/>
+      <metrics loc="182" ncloc="172" classes="1" methods="10" coveredmethods="7" conditionals="0" coveredconditionals="0" statements="72" coveredstatements="64" elements="82" coveredelements="71"/>
+    </file>
+    <file name="/Users/jascha030/.development/Projects/xerox/xerox/src/Database/DatabaseService.php">
+      <class name="Jascha030\Xerox\Database\DatabaseService" namespace="global">
+        <metrics complexity="5" methods="4" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="25" coveredstatements="23" elements="29" coveredelements="26"/>
+      </class>
+      <line num="21" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="1"/>
+      <line num="27" type="stmt" count="1"/>
+      <line num="28" type="stmt" count="1"/>
+      <line num="29" type="stmt" count="1"/>
+      <line num="30" type="stmt" count="1"/>
+      <line num="31" type="stmt" count="1"/>
+      <line num="36" type="method" name="connect" visibility="private" complexity="1" crap="1" count="1"/>
+      <line num="39" type="stmt" count="1"/>
+      <line num="40" type="stmt" count="1"/>
+      <line num="41" type="stmt" count="1"/>
+      <line num="42" type="stmt" count="1"/>
+      <line num="45" type="stmt" count="1"/>
+      <line num="47" type="stmt" count="1"/>
+      <line num="53" type="method" name="createDatabase" visibility="public" complexity="2" crap="2" count="1"/>
+      <line num="55" type="stmt" count="1"/>
+      <line num="56" type="stmt" count="1"/>
+      <line num="59" type="stmt" count="1"/>
+      <line num="60" type="stmt" count="1"/>
+      <line num="61" type="stmt" count="1"/>
+      <line num="62" type="stmt" count="1"/>
+      <line num="64" type="stmt" count="1"/>
+      <line num="65" type="stmt" count="1"/>
+      <line num="70" type="method" name="dropDatabase" visibility="public" complexity="1" crap="1.04" count="1"/>
+      <line num="72" type="stmt" count="1"/>
+      <line num="73" type="stmt" count="1"/>
+      <line num="74" type="stmt" count="1"/>
+      <line num="75" type="stmt" count="1"/>
+      <line num="77" type="stmt" count="0"/>
+      <line num="78" type="stmt" count="0"/>
+      <metrics loc="79" ncloc="70" classes="1" methods="4" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="25" coveredstatements="23" elements="29" coveredelements="26"/>
+    </file>
+    <file name="/Users/jascha030/.development/Projects/xerox/xerox/src/Database/DatabaseServiceInterface.php">
+      <metrics loc="20" ncloc="17" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <file name="/Users/jascha030/.development/Projects/xerox/xerox/src/Twig/Config/TwigConfigStoreInterface.php">
+      <class name="Jascha030\Xerox\Twig\Config\TwigConfigStore" namespace="global">
+        <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+      </class>
+      <metrics loc="8" ncloc="8" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <file name="/Users/jascha030/.development/Projects/xerox/xerox/src/Twig/TemplaterInterface.php">
+      <metrics loc="12" ncloc="12" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
+    </file>
+    <file name="/Users/jascha030/.development/Projects/xerox/xerox/src/Twig/TwigTemplater.php">
+      <class name="Jascha030\Xerox\Twig\TwigTemplater" namespace="global">
+        <metrics complexity="3" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="5" elements="8" coveredelements="8"/>
+      </class>
+      <line num="14" type="method" name="__construct" visibility="public" complexity="1" crap="1" count="2"/>
+      <line num="16" type="stmt" count="2"/>
+      <line num="17" type="stmt" count="2"/>
+      <line num="19" type="method" name="getEnvironment" visibility="public" complexity="1" crap="1" count="4"/>
+      <line num="21" type="stmt" count="4"/>
+      <line num="27" type="method" name="render" visibility="public" complexity="1" crap="1" count="3"/>
+      <line num="30" type="stmt" count="3"/>
+      <line num="31" type="stmt" count="3"/>
+      <metrics loc="33" ncloc="30" classes="1" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="5" elements="8" coveredelements="8"/>
+    </file>
+    <file name="/Users/jascha030/.development/Projects/xerox/xerox/src/Xerographer.php">
+      <class name="Jascha030\Xerox\Xerographer" namespace="global">
+        <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="4" coveredelements="4"/>
+      </class>
+      <line num="31" type="method" name="getConfigurationFiles" visibility="public" complexity="1" crap="1" count="4"/>
+      <line num="33" type="stmt" count="4"/>
+      <line num="36" type="stmt" count="4"/>
+      <line num="37" type="stmt" count="4"/>
+      <metrics loc="40" ncloc="26" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="4" coveredelements="4"/>
+    </file>
+    <metrics files="9" loc="507" ncloc="465" classes="6" methods="29" coveredmethods="25" conditionals="0" coveredconditionals="0" statements="140" coveredstatements="130" elements="169" coveredelements="155"/>
+  </project>
+</coverage>
