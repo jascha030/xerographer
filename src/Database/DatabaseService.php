@@ -24,10 +24,10 @@ class DatabaseService implements DatabaseServiceInterface
         string $host = 'localhost',
         string $driver = 'pdo_mysql'
     ) {
-        $this->user = $user;
+        $this->user     = $user;
         $this->password = $password;
-        $this->host = $host;
-        $this->driver = $driver;
+        $this->host     = $host;
+        $this->driver   = $driver;
     }
 
     /**
@@ -60,5 +60,20 @@ class DatabaseService implements DatabaseServiceInterface
             ->connection
             ->createSchemaManager()
             ->createDatabase($name);
+
+        $this->connection->close();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function dropDatabase(string $name): void
+    {
+        $this->connect()
+            ->connection
+            ->createSchemaManager()
+            ->dropDatabase($name);
+
+        $this->connection->close();
     }
 }
