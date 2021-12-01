@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jascha030\Xerox\Tests\Twig;
 
 use Jascha030\Xerox\Twig\TemplaterInterface;

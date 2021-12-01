@@ -80,7 +80,7 @@ final class InitCommand extends Command
         $url = $this->ask($input, $output, 'url');
 
         try {
-            $this->generateDotEnv($database, $user, $password, 'https://' . $url . '.test', $this->getSalts());
+            $this->generateDotEnv($database, $user, $password, sprintf("https://%s.test", $url), $this->getSalts());
         } catch (LoaderError | RuntimeError | SyntaxError $e) {
             $output->writeln($e->getMessage());
 
@@ -99,25 +99,6 @@ final class InitCommand extends Command
             '',
             str_replace(' ', '_', strtolower($name))
         );
-    }
-
-    /**
-     * @throws RuntimeError
-     * @throws SyntaxError
-     * @throws LoaderError
-     */
-    private function generateDotEnv(string $database, string $user, string $password, string $url, string $salts): void
-    {
-        $envString = $this->generateEnvContents($database, $user, $password, $url, $salts);
-        $env       = "{$this->directory}/public/.env";
-
-        if (! file_exists($env)) {
-            (new Filesystem())->touch($env);
-
-            if (! file_put_contents($env, $envString)) {
-                throw new RuntimeException('Could not generate .env from template, check access rights.');
-            }
-        }
     }
 
     /**
@@ -145,10 +126,7 @@ final class InitCommand extends Command
         );
     }
 
-    /**
-     * @todo: think about separation of concerns, does this belong in a Command class?
-     */
-    public function getSalts(): ?string
+    public function getSalts(): string
     {
         $resource = curl_init();
         curl_setopt($resource, CURLOPT_RETURNTRANSFER, 1);
@@ -158,24 +136,37 @@ final class InitCommand extends Command
 
         preg_match_all(self::CONST_REGEX, $data, $matches);
 
-        if (isset($matches[1], $matches[2])) {
-            $salts = array_combine($matches[1], $matches[2]);
+        $salts = array_combine($matches[1], $matches[2]);
 
-            ob_start();
+        ob_start();
 
-            foreach ($salts as $key => $value) {
-                echo $key . "=\"{$value}\"" . PHP_EOL;
-            }
-
-            return ob_get_clean();
+        foreach ($salts as $key => $value) {
+            echo $key . "=\"{$value}\"" . PHP_EOL;
         }
 
-        return null;
+        return ob_get_clean();
     }
 
     protected function getQuestionContainer(): ContainerInterface
     {
         return $this->container;
+    }
+
+    /**
+     * @throws RuntimeError
+     * @throws SyntaxError
+     * @throws LoaderError
+     */
+    private function generateDotEnv(string $database, string $user, string $password, string $url, string $salts): void
+    {
+        $envString = $this->generateEnvContents($database, $user, $password, $url, $salts);
+        $env       = "{$this->directory}/public/.env";
+
+        if (! file_exists($env)) {
+            (new Filesystem())->touch($env);
+
+            file_put_contents($env, $envString);
+        }
     }
 
     private function valetLink(string $domain, OutputInterface $output): void

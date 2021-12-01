@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jascha030\Xerox\Tests\Console\Command;
 
-use Dotenv\Dotenv;
+use DI\ContainerBuilder;
 use Exception;
 use Jascha030\Xerox\Application\Application;
 use Jascha030\Xerox\Console\Command\InitCommand;
@@ -11,8 +13,11 @@ use Jascha030\Xerox\Tests\TestDotEnvTrait;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Process\Process;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
@@ -67,7 +72,8 @@ final class InitCommandTest extends TestCase
      */
     public function testConstruct(): InitCommand
     {
-        $command = new InitCommand($this->getContainer());
+        $container = $this->getContainer();
+        $command = new InitCommand($container);
 
         self::assertInstanceOf(Command::class, $command);
         self::assertInstanceOf(InitCommand::class, $command);
@@ -92,9 +98,116 @@ final class InitCommandTest extends TestCase
     /**
      * @depends testConstruct
      */
+    public function testGetQuestionKey(InitCommand $command): void
+    {
+        self::assertEquals('init', $command->getQuestionKey());
+    }
+
+    /**
+     * @depends testConstruct
+     */
+    public function testGetQuestionHelper(InitCommand $command): void
+    {
+        $command->setApplication($this->getApplication());
+
+        /** @noinspection UnnecessaryAssertionInspection */
+        self::assertInstanceOf(QuestionHelper::class, $command->getQuestionHelper());
+    }
+
+    /**
+     * @depends testConstruct
+     * @depends testConfigure
+     * @depends testSanitizeDatabaseName
+     * @depends testGetSalts
+     * @depends testGenerateEnvContents
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function testExecute(InitCommand $command): void
+    {
+        $env     = $this->getDotEnv();
+        $project = uniqid('unittest', false);
+        $command->setApplication($this->getApplication());
+
+        $commandTester = new CommandTester($command);
+        $commandTester->setInputs([$project, $env['DB_USER'], $env['DB_PASSWORD'], $project, $env['ROOT_PASSWORD']]);
+
+        self::assertEquals(0, $commandTester->execute(['command' => $command]));
+        self::assertTrue($this->fileSystem->exists($this->projectDir . '/public/.env'));
+
+        $this->cleanTestProject();
+
+        $database = new DatabaseService($env['DB_USER'], $env['DB_PASSWORD']);
+        $database->dropDatabase("wp_$project");
+        $this->unlinkPublicDir($project);
+
+        self::assertEquals(0, $commandTester->execute(['command' => $command, '--production' => true]));
+        self::assertTrue($this->fileSystem->exists($this->projectDir . '/public/.env'));
+
+        $database->dropDatabase("wp_$project");
+        $this->unlinkPublicDir($project);
+    }
+
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     * @throws Exception
+     */
+    public function testExecuteWithInvalidTwigTemplate(): void
+    {
+        $env         = $this->getDotEnv();
+        $projectName = uniqid('unittest', false);
+        $command     = new InitCommand($this->getContainerWithTestTwigEnvironment());
+        $command->setApplication($this->getApplication());
+
+        $commandTester = new CommandTester($command);
+        $commandTester->setInputs([
+            $projectName,
+            $env['DB_USER'],
+            $env['DB_PASSWORD'],
+            $projectName,
+            $env['ROOT_PASSWORD']
+        ]);
+
+        self::assertEquals(1, $commandTester->execute(['command' => $command]));
+
+        // Remove created database.
+        $database = new DatabaseService($env['DB_USER'], $env['DB_PASSWORD']);
+        $database->dropDatabase("wp_$projectName");
+    }
+
+    public function testFailureOnInvalidDatabaseCredentials(): void
+    {
+        $command = new InitCommand($this->getContainer());
+        $command->setApplication($this->getApplication());
+
+        $commandTester = new CommandTester($command);
+        $commandTester->setInputs(['unittest', 'probablyNotYourUsername', 'probablyNotYourPassword', 'unittest', '']);
+
+        self::assertEquals(1, $commandTester->execute(['command' => $command]));
+    }
+
+    /**
+     * @depends testConstruct
+     */
     public function testSanitizeDatabaseName(InitCommand $command): void
     {
         self::assertEquals('testdb', $command->sanitizeDatabaseName('test db'));
+    }
+
+    /**
+     * @depends testConstruct
+     *
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function testGenerateEnvContents(InitCommand $command): void
+    {
+        $testEnv  = dirname(__FILE__, 3) . '/Fixtures/Templates/test.env';
+        $contents = $command->generateEnvContents(...array_values(self::TEST_VALUES));
+
+        $testAgainst = file_get_contents($testEnv);
+
+        self::assertEquals($testAgainst, $contents);
     }
 
     /**
@@ -122,55 +235,34 @@ final class InitCommandTest extends TestCase
     }
 
     /**
-     * @depends testConstruct
-     *
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
+     * @throws Exception
      */
-    public function testGenerateEnvContents(InitCommand $command): void
+    public function testExceptionIsThrownOnInvalidTwigTemplate(): void
     {
-        $testEnv  = dirname(__FILE__, 3) . '/Fixtures/Templates/test.env';
-        $contents = $command->generateEnvContents(...array_values(self::TEST_VALUES));
-
-        $testAgainst = file_get_contents($testEnv);
-
-        self::assertEquals($testAgainst, $contents);
-    }
-
-    /**
-     * @depends testConstruct
-     * @depends testConfigure
-     * @depends testSanitizeDatabaseName
-     * @depends testGetSalts
-     * @depends testGenerateEnvContents
-     * @throws \Doctrine\DBAL\Exception
-     */
-    public function testExecute(InitCommand $command): void
-    {
-        $env         = $this->getDotEnv();
-        $projectName = uniqid('unittest', false);
+        $command = new InitCommand($this->getContainerWithTestTwigEnvironment());
         $command->setApplication($this->getApplication());
 
-        $commandTester = new CommandTester($command);
-        $commandTester->setInputs([
-            $projectName,
-            $env['DB_USER'],
-            $env['DB_PASSWORD'],
-            $projectName,
-            $env['ROOT_PASSWORD']
-        ]);
-
-        self::assertEquals(0, $commandTester->execute(['command' => $command]));
-        self::assertTrue($this->fileSystem->exists($this->projectDir . '/public/.env'));
-
-        $database = new DatabaseService($env['DB_USER'], $env['DB_PASSWORD']);
-        $database->dropDatabase("wp_$projectName");
+        $this->expectException(LoaderError::class);
+        $command->generateEnvContents(...array_values(self::TEST_VALUES));
     }
 
     private function getContainer(): ContainerInterface
     {
         return include dirname(__FILE__, 4) . '/includes/bootstrap.php';
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getContainerWithTestTwigEnvironment(): ContainerInterface
+    {
+        $builder = new ContainerBuilder();
+        $builder->useAutowiring(false);
+        $builder->useAnnotations(false);
+        $builder->addDefinitions(dirname(__FILE__, 4) . '/config/console.php');
+        $builder->addDefinitions(dirname(__FILE__, 3) . '/test-twig-definition.php');
+
+        return $builder->build();
     }
 
     private function getApplication(): Application
@@ -194,5 +286,20 @@ final class InitCommandTest extends TestCase
         if ($this->fileSystem->exists($this->projectDir . '/public/.env')) {
             $this->fileSystem->remove($this->projectDir . '/public/.env');
         }
+    }
+
+    /**
+     * Unlink symbolic link created by valet.
+     */
+    private function unlinkPublicDir(string $linkedName): void
+    {
+        $output   = new ConsoleOutput();
+        $callback = static function ($type, $buffer) use ($output) {
+            $output->writeln($buffer);
+        };
+
+        $link = Process::fromShellCommandline("valet unlink {$linkedName}");
+        $link->setWorkingDirectory($this->projectDir . '/public');
+        $link->run($callback);
     }
 }
