@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jascha030\Xerox\Tests\Config;
 
 use Jascha030\Xerox\Config\WPConfigStore;
