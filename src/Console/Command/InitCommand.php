@@ -126,10 +126,7 @@ final class InitCommand extends Command
         );
     }
 
-    /**
-     * @todo: think about separation of concerns, does this belong in a Command class?
-     */
-    public function getSalts(): ?string
+    public function getSalts(): string
     {
         $resource = curl_init();
         curl_setopt($resource, CURLOPT_RETURNTRANSFER, 1);
@@ -139,19 +136,15 @@ final class InitCommand extends Command
 
         preg_match_all(self::CONST_REGEX, $data, $matches);
 
-        if (isset($matches[1], $matches[2])) {
-            $salts = array_combine($matches[1], $matches[2]);
+        $salts = array_combine($matches[1], $matches[2]);
 
-            ob_start();
+        ob_start();
 
-            foreach ($salts as $key => $value) {
-                echo $key . "=\"{$value}\"" . PHP_EOL;
-            }
-
-            return ob_get_clean();
+        foreach ($salts as $key => $value) {
+            echo $key . "=\"{$value}\"" . PHP_EOL;
         }
 
-        return null;
+        return ob_get_clean();
     }
 
     protected function getQuestionContainer(): ContainerInterface
