@@ -106,25 +106,6 @@ final class InitCommand extends Command
      * @throws SyntaxError
      * @throws LoaderError
      */
-    private function generateDotEnv(string $database, string $user, string $password, string $url, string $salts): void
-    {
-        $envString = $this->generateEnvContents($database, $user, $password, $url, $salts);
-        $env       = "{$this->directory}/public/.env";
-
-        if (! file_exists($env)) {
-            (new Filesystem())->touch($env);
-
-            if (! file_put_contents($env, $envString)) {
-                throw new RuntimeException('Could not generate .env from template, check access rights.');
-            }
-        }
-    }
-
-    /**
-     * @throws RuntimeError
-     * @throws SyntaxError
-     * @throws LoaderError
-     */
     public function generateEnvContents(string $database, string $user, string $password, string $url, string $salts): string
     {
         /** @var TwigTemplater $templater */
@@ -176,6 +157,25 @@ final class InitCommand extends Command
     protected function getQuestionContainer(): ContainerInterface
     {
         return $this->container;
+    }
+
+    /**
+     * @throws RuntimeError
+     * @throws SyntaxError
+     * @throws LoaderError
+     */
+    private function generateDotEnv(string $database, string $user, string $password, string $url, string $salts): void
+    {
+        $envString = $this->generateEnvContents($database, $user, $password, $url, $salts);
+        $env       = "{$this->directory}/public/.env";
+
+        if (! file_exists($env)) {
+            (new Filesystem())->touch($env);
+
+            if (! file_put_contents($env, $envString)) {
+                throw new RuntimeException('Could not generate .env from template, check access rights.');
+            }
+        }
     }
 
     private function valetLink(string $domain, OutputInterface $output): void
