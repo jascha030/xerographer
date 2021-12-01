@@ -51,6 +51,7 @@ class DatabaseService implements DatabaseServiceInterface, DatabaseRemovalInterf
 
     /**
      * {@inheritdoc}
+     *
      * @throws Exception
      */
     public function dropDatabase(string $name): void
