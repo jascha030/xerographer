@@ -2,7 +2,9 @@
 
 /**
  * PHPUnit bootstrap file.
+ * Uses current dir as workingdir during test execution.
  */
+
 declare(strict_types=1);
 
 /**
