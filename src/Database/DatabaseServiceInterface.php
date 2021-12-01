@@ -2,6 +2,8 @@
 
 namespace Jascha030\Xerox\Database;
 
+use Doctrine\DBAL\Exception;
+
 interface DatabaseServiceInterface
 {
     public function __construct(
@@ -12,7 +14,7 @@ interface DatabaseServiceInterface
     );
 
     /**
-     * @throws \Doctrine\DBAL\Exception
+     * @throws Exception
      */
     public function createDatabase(string $name): void;
 }
