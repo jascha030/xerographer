@@ -187,6 +187,9 @@ final class InitCommandTest extends TestCase
         self::assertEquals(0, $commandTester->execute(['command' => $command]));
         self::assertTrue($this->fileSystem->exists($this->projectDir . '/public/.env'));
 
+        // Execute second time to assert failure.
+        self::assertEquals(1, $commandTester->execute(['command' => $command]));
+
         $database = new DatabaseService($env['DB_USER'], $env['DB_PASSWORD']);
         $database->dropDatabase("wp_$projectName");
 
