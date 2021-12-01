@@ -7,6 +7,7 @@ use Exception;
 use Jascha030\Xerox\Application\Application;
 use Jascha030\Xerox\Console\Command\InitCommand;
 use Jascha030\Xerox\Database\DatabaseService;
+use Jascha030\Xerox\Tests\TestDotEnvTrait;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -18,6 +19,8 @@ use Twig\Error\SyntaxError;
 
 final class InitCommandTest extends TestCase
 {
+    use TestDotEnvTrait;
+
     private const TEST_VALUES = [
         'DB_NAME'     => 'testdb',
         'DB_USER'     => 'user',
@@ -146,7 +149,7 @@ final class InitCommandTest extends TestCase
     public function testExecute(InitCommand $command): void
     {
         $env         = $this->getDotEnv();
-        $projectName = uniqid('unittest', true);
+        $projectName = uniqid('unittest', false);
         $command->setApplication($this->getApplication());
 
         $commandTester = new CommandTester($command);
@@ -162,7 +165,7 @@ final class InitCommandTest extends TestCase
         self::assertTrue($this->fileSystem->exists($this->projectDir . '/public/.env'));
 
         $database = new DatabaseService($env['DB_USER'], $env['DB_PASSWORD']);
-        $database->dropDatabase($projectName);
+        $database->dropDatabase("wp_$projectName");
     }
 
     private function getContainer(): ContainerInterface
@@ -176,11 +179,6 @@ final class InitCommandTest extends TestCase
         $app->setAutoExit(false);
 
         return $app;
-    }
-
-    private function getDotEnv(): array
-    {
-        return Dotenv::createMutable(dirname(__FILE__, 3))->load();
     }
 
     private function cleanTestProject(): void
