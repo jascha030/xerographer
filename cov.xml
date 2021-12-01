@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1638393306">
-  <project timestamp="1638393306">
+<coverage generated="1638394900">
+  <project timestamp="1638394900">
     <file name="/Users/jascha030/.development/Projects/xerox/xerographer/src/Application/Application.php">
       <class name="Jascha030\Xerox\Application\Application" namespace="global">
         <metrics complexity="4" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="8" elements="11" coveredelements="11"/>
@@ -73,10 +73,10 @@
       <line num="48" type="stmt" count="4"/>
       <line num="49" type="stmt" count="4"/>
       <line num="50" type="stmt" count="4"/>
-      <line num="52" type="method" name="getQuestionKey" visibility="public" complexity="1" crap="1" count="1"/>
-      <line num="54" type="stmt" count="1"/>
-      <line num="57" type="method" name="getQuestionHelper" visibility="public" complexity="1" crap="1" count="1"/>
-      <line num="59" type="stmt" count="1"/>
+      <line num="52" type="method" name="getQuestionKey" visibility="public" complexity="1" crap="1" count="2"/>
+      <line num="54" type="stmt" count="2"/>
+      <line num="57" type="method" name="getQuestionHelper" visibility="public" complexity="1" crap="1" count="2"/>
+      <line num="59" type="stmt" count="2"/>
       <line num="62" type="method" name="execute" visibility="public" complexity="3" crap="3.40" count="1"/>
       <line num="64" type="stmt" count="1"/>
       <line num="65" type="stmt" count="1"/>
@@ -229,10 +229,10 @@
       <class name="Jascha030\Xerox\Xerographer" namespace="global">
         <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="4" coveredelements="4"/>
       </class>
-      <line num="31" type="method" name="getConfigurationFiles" visibility="public" complexity="1" crap="1" count="4"/>
-      <line num="33" type="stmt" count="4"/>
-      <line num="36" type="stmt" count="4"/>
-      <line num="37" type="stmt" count="4"/>
+      <line num="31" type="method" name="getConfigurationFiles" visibility="public" complexity="1" crap="1" count="3"/>
+      <line num="33" type="stmt" count="3"/>
+      <line num="36" type="stmt" count="3"/>
+      <line num="37" type="stmt" count="3"/>
       <metrics loc="40" ncloc="26" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="3" elements="4" coveredelements="4"/>
     </file>
     <metrics files="11" loc="562" ncloc="508" classes="7" methods="32" coveredmethods="28" conditionals="0" coveredconditionals="0" statements="145" coveredstatements="136" elements="177" coveredelements="164"/>
