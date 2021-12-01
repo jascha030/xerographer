@@ -71,10 +71,13 @@ final class InitCommandTest extends TestCase
      */
     public function testConstruct(): InitCommand
     {
-        $command = new InitCommand($this->getContainer());
+        $container = $this->getContainer();
+        $command = new InitCommand($container);
 
         self::assertInstanceOf(Command::class, $command);
         self::assertInstanceOf(InitCommand::class, $command);
+
+        $command->setApplication($this->getApplication());
 
         return $command;
     }
@@ -171,7 +174,6 @@ final class InitCommandTest extends TestCase
     {
         $env         = $this->getDotEnv();
         $projectName = uniqid('unittest', false);
-        $command->setApplication($this->getApplication());
 
         $commandTester = new CommandTester($command);
         $commandTester->setInputs([
