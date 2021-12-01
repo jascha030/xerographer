@@ -4,6 +4,7 @@ namespace Jascha030\Xerox\Database;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
+use Doctrine\DBAL\Exception;
 
 class DatabaseService implements DatabaseServiceInterface
 {
@@ -30,7 +31,7 @@ class DatabaseService implements DatabaseServiceInterface
     }
 
     /**
-     * @throws \Doctrine\DBAL\Exception
+     * @throws Exception
      */
     private function connect(): DatabaseServiceInterface
     {
@@ -47,7 +48,7 @@ class DatabaseService implements DatabaseServiceInterface
     }
 
     /**
-     * @throws \Doctrine\DBAL\Exception
+     * @throws Exception
      */
     public function createDatabase(string $name): void
     {
