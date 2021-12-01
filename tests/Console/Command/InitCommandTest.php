@@ -77,8 +77,6 @@ final class InitCommandTest extends TestCase
         self::assertInstanceOf(Command::class, $command);
         self::assertInstanceOf(InitCommand::class, $command);
 
-        $command->setApplication($this->getApplication());
-
         return $command;
     }
 
@@ -109,6 +107,8 @@ final class InitCommandTest extends TestCase
      */
     public function testGetQuestionHelper(InitCommand $command): void
     {
+        $command->setApplication($this->getApplication());
+
         /** @noinspection UnnecessaryAssertionInspection */
         self::assertInstanceOf(QuestionHelper::class, $command->getQuestionHelper());
     }
@@ -174,6 +174,8 @@ final class InitCommandTest extends TestCase
     {
         $env         = $this->getDotEnv();
         $projectName = uniqid('unittest', false);
+
+        $command->setApplication($this->getApplication());
 
         $commandTester = new CommandTester($command);
         $commandTester->setInputs([
