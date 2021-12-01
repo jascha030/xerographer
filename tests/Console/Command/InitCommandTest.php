@@ -38,8 +38,6 @@ final class InitCommandTest extends TestCase
         'NONCE_SALT',
     ];
 
-    private string $projectName;
-
     private string $projectDir;
 
     private Filesystem $fileSystem;
@@ -147,16 +145,16 @@ final class InitCommandTest extends TestCase
      */
     public function testExecute(InitCommand $command): void
     {
-        $env               = $this->getDotEnv();
-        $this->projectName = uniqid('unittest', true);
+        $env         = $this->getDotEnv();
+        $projectName = uniqid('unittest', true);
         $command->setApplication($this->getApplication());
 
         $commandTester = new CommandTester($command);
         $commandTester->setInputs([
-            $this->projectName,
+            $projectName,
             $env['DB_USER'],
             $env['DB_PASSWORD'],
-            $this->projectName,
+            $projectName,
             $env['ROOT_PASSWORD']
         ]);
 
@@ -164,7 +162,7 @@ final class InitCommandTest extends TestCase
         self::assertTrue($this->fileSystem->exists($this->projectDir . '/public/.env'));
 
         $database = new DatabaseService($env['DB_USER'], $env['DB_PASSWORD']);
-        $database->dropDatabase($this->projectName);
+        $database->dropDatabase($projectName);
     }
 
     private function getContainer(): ContainerInterface
