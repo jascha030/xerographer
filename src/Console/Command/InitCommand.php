@@ -80,7 +80,7 @@ final class InitCommand extends Command
         $url = $this->ask($input, $output, 'url');
 
         try {
-            $this->generateDotEnv($database, $user, $password, 'https://' . $url . '.test', $this->getSalts());
+            $this->generateDotEnv($database, $user, $password, sprintf("https://%s.test", $url), $this->getSalts());
         } catch (LoaderError | RuntimeError | SyntaxError $e) {
             $output->writeln($e->getMessage());
 
