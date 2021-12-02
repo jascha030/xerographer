@@ -1,6 +1,6 @@
 {
-  "name": "jascha030/xerox",
-  "description": "Framework, heavily inspired by laravel and roots/bedrock, aiming to help relieve your WordPression.",
+  "name": "jascha030/xerographer",
+  "description": "Framework, heavily inspired by Symfony, Laravel and roots/bedrock, aiming to help relieve your \"Word-Pression\".",
   "license": "MIT",
   "authors": [
     {
