@@ -8,15 +8,10 @@ namespace Jascha030;
 use Jascha030\Xerox\Application\Application;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Output\ConsoleOutput;
 
 $container = dirname(__FILE__, 2) . '/includes/bootstrap.php';
-$output    = new ConsoleOutput();
 
 if (!is_subclass_of($container, ContainerInterface::class)) {
-    $output->writeln("Could not load the app container.");
-    $output->writeln("Exiting application.");
-
     return Command::FAILURE;
 }
 
@@ -25,7 +20,5 @@ $app = new Application($container);
 try {
     $app->run();
 } catch (\Exception $e) {
-    $output->writeln($e->getMessage());
-
     return Command::FAILURE;
 }
