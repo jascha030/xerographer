@@ -26,5 +26,4 @@ $autoloader = static function () {
     throw new \RuntimeException($errorMsg);
 };
 
-/** @noinspection PhpIncludeInspection */
 require_once $autoloader();
