@@ -5,25 +5,50 @@ declare(strict_types=1);
 
 namespace Jascha030;
 
+use DI\Container;
 use Jascha030\Xerox\Application\Application;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
+/**
+ * Load Container config script.
+ * Loads autoloader, and bootstraps the Container.
+ *
+ * @returns Container
+ */
 $container = include dirname(__FILE__, 2) . '/includes/bootstrap.php';
-$input     = new ArgvInput();
-$output    = new ConsoleOutput();
 
-if (!is_subclass_of($container, ContainerInterface::class)) {
-    $output->writeln("Could not load the app container.");
-    $output->writeln("Exiting application.");
+/**
+ * Create Input and Output streams for exception display.
+ */
+$input  = new ArgvInput();
+$output = new ConsoleOutput();
+
+/**
+ * Write error message to the ConsoleOutput when $container is invalid.
+ */
+if (! is_subclass_of($container, ContainerInterface::class)) {
+    $output->writeln('Could not load the app container.');
+    $output->writeln('Exiting application.');
 
     return Command::FAILURE;
 }
 
+/**
+ * Create the console Application instance.
+ *
+ * @see Application
+ * @see \Symfony\Component\Console\Application
+ */
 $app = new Application($container);
 
+
+/**
+ * Run the Console Application
+ * thrown Exceptions are caught and their messages are written to ConsoleOutput.
+ */
 try {
     $app->run($input, $output);
 } catch (\Exception $e) {
@@ -31,3 +56,5 @@ try {
 
     return Command::FAILURE;
 }
+
+return Command::SUCCESS;
