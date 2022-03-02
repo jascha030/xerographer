@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 use Jascha030\Twig\Templater\TemplaterInterface;
 use Jascha030\Xerox\Console\Command\InitCommand;
 use Jascha030\Xerox\Xerographer;

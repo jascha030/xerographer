@@ -9,7 +9,6 @@ use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Exception\CommandNotFoundException;
 use Symfony\Component\Console\Tester\ApplicationTester;
 use Symfony\Contracts\Service\ResetInterface;
 use function Jascha030\Xerox\Helpers\container;
