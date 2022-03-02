@@ -28,6 +28,9 @@
     "composer/composer": "^2.1"
   },
   "autoload": {
+    "files": [
+      "includes/helpers/container.php"
+    ],
     "psr-4": {
       "Jascha030\\Xerox\\": "src/"
     }
