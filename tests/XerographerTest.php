@@ -1,27 +1,33 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jascha030\Xerox\Tests;
 
 use Jascha030\Xerox\Xerographer;
 use PHPUnit\Framework\TestCase;
 
-class XerographerTest extends TestCase
+/**
+ * @covers \Jascha030\Xerox\Application\Application
+ * @internal
+ */
+final class XerographerTest extends TestCase
 {
     public function testGetConfigurationFiles(): void
     {
         $configDir = dirname(__DIR__) . '/config';
         $dirs      = Xerographer::getConfigurationFiles();
 
-        self::assertEquals(
+        $this->assertEquals(
             [
                 "{$configDir}/console.php",
-                "{$configDir}/twig.php"
+                "{$configDir}/twig.php",
             ],
             $dirs
         );
 
         foreach ($dirs as $filename) {
-            self::assertFileExists($filename);
+            $this->assertFileExists($filename);
         }
     }
 }

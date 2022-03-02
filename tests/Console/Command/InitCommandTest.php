@@ -12,7 +12,6 @@ use Jascha030\Xerox\Database\DatabaseService;
 use Jascha030\Xerox\Tests\TestDotEnvTrait;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -22,6 +21,11 @@ use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 
+/**
+ * @covers \Jascha030\Xerox\Console\Command\InitCommand
+ * @covers \Jascha030\Xerox\Console\Question\AsksConsoleQuestionsTrait
+ * @internal
+ */
 final class InitCommandTest extends TestCase
 {
     use TestDotEnvTrait;
@@ -56,15 +60,11 @@ final class InitCommandTest extends TestCase
         $this->projectDir = dirname(__FILE__, 3) . '/Fixtures/testproject';
 
         $this->cleanTestProject();
-
-        parent::setUp();
     }
 
     public function tearDown(): void
     {
         $this->cleanTestProject();
-
-        parent::tearDown();
     }
 
     /**
@@ -73,10 +73,9 @@ final class InitCommandTest extends TestCase
     public function testConstruct(): InitCommand
     {
         $container = $this->getContainer();
-        $command = new InitCommand($container);
+        $command   = new InitCommand($container);
 
-        self::assertInstanceOf(Command::class, $command);
-        self::assertInstanceOf(InitCommand::class, $command);
+        $this->assertInstanceOf(InitCommand::class, $command);
 
         return $command;
     }
@@ -89,10 +88,10 @@ final class InitCommandTest extends TestCase
         $description = 'Init a new Environment with database.';
 
         $command->setDescription('test');
-        self::assertEquals('test', $command->getDescription());
+        $this->assertEquals('test', $command->getDescription());
 
         $command->configure();
-        self::assertEquals($description, $command->getDescription());
+        $this->assertEquals($description, $command->getDescription());
     }
 
     /**
@@ -100,7 +99,7 @@ final class InitCommandTest extends TestCase
      */
     public function testGetQuestionKey(InitCommand $command): void
     {
-        self::assertEquals('init', $command->getQuestionKey());
+        $this->assertEquals('init', $command->getQuestionKey());
     }
 
     /**
@@ -111,7 +110,7 @@ final class InitCommandTest extends TestCase
         $command->setApplication($this->getApplication());
 
         /** @noinspection UnnecessaryAssertionInspection */
-        self::assertInstanceOf(QuestionHelper::class, $command->getQuestionHelper());
+        $this->assertInstanceOf(QuestionHelper::class, $command->getQuestionHelper());
     }
 
     /**
@@ -120,6 +119,7 @@ final class InitCommandTest extends TestCase
      * @depends testSanitizeDatabaseName
      * @depends testGetSalts
      * @depends testGenerateEnvContents
+     *
      * @throws \Doctrine\DBAL\Exception
      */
     public function testExecute(InitCommand $command): void
@@ -131,19 +131,19 @@ final class InitCommandTest extends TestCase
         $commandTester = new CommandTester($command);
         $commandTester->setInputs([$project, $env['DB_USER'], $env['DB_PASSWORD'], $project, $env['ROOT_PASSWORD']]);
 
-        self::assertEquals(0, $commandTester->execute(['command' => $command]));
-        self::assertTrue($this->fileSystem->exists($this->projectDir . '/public/.env'));
+        $this->assertEquals(0, $commandTester->execute(['command' => $command]));
+        $this->assertTrue($this->fileSystem->exists($this->projectDir . '/public/.env'));
 
         $this->cleanTestProject();
 
         $database = new DatabaseService($env['DB_USER'], $env['DB_PASSWORD']);
-        $database->dropDatabase("wp_$project");
+        $database->dropDatabase("wp_{$project}");
         $this->unlinkPublicDir($project);
 
-        self::assertEquals(0, $commandTester->execute(['command' => $command, '--production' => true]));
-        self::assertTrue($this->fileSystem->exists($this->projectDir . '/public/.env'));
+        $this->assertEquals(0, $commandTester->execute(['command' => $command, '--production' => true]));
+        $this->assertTrue($this->fileSystem->exists($this->projectDir . '/public/.env'));
 
-        $database->dropDatabase("wp_$project");
+        $database->dropDatabase("wp_{$project}");
         $this->unlinkPublicDir($project);
     }
 
@@ -164,14 +164,14 @@ final class InitCommandTest extends TestCase
             $env['DB_USER'],
             $env['DB_PASSWORD'],
             $projectName,
-            $env['ROOT_PASSWORD']
+            $env['ROOT_PASSWORD'],
         ]);
 
-        self::assertEquals(1, $commandTester->execute(['command' => $command]));
+        $this->assertEquals(1, $commandTester->execute(['command' => $command]));
 
         // Remove created database.
         $database = new DatabaseService($env['DB_USER'], $env['DB_PASSWORD']);
-        $database->dropDatabase("wp_$projectName");
+        $database->dropDatabase("wp_{$projectName}");
     }
 
     public function testFailureOnInvalidDatabaseCredentials(): void
@@ -182,7 +182,7 @@ final class InitCommandTest extends TestCase
         $commandTester = new CommandTester($command);
         $commandTester->setInputs(['unittest', 'probablyNotYourUsername', 'probablyNotYourPassword', 'unittest', '']);
 
-        self::assertEquals(1, $commandTester->execute(['command' => $command]));
+        $this->assertEquals(1, $commandTester->execute(['command' => $command]));
     }
 
     /**
@@ -190,7 +190,7 @@ final class InitCommandTest extends TestCase
      */
     public function testSanitizeDatabaseName(InitCommand $command): void
     {
-        self::assertEquals('testdb', $command->sanitizeDatabaseName('test db'));
+        $this->assertEquals('testdb', $command->sanitizeDatabaseName('test db'));
     }
 
     /**
@@ -207,7 +207,7 @@ final class InitCommandTest extends TestCase
 
         $testAgainst = file_get_contents($testEnv);
 
-        self::assertEquals($testAgainst, $contents);
+        $this->assertEquals($testAgainst, $contents);
     }
 
     /**
@@ -217,11 +217,11 @@ final class InitCommandTest extends TestCase
     {
         $salts = $command->getSalts();
 
-        self::assertIsString($salts);
+        $this->assertIsString($salts);
 
         $lines = explode(PHP_EOL, $salts);
-        self::assertCount(9, $lines);
-        self::assertEquals('', $lines[8]);
+        $this->assertCount(9, $lines);
+        $this->assertEquals('', $lines[8]);
 
         array_pop($lines);
 
@@ -231,7 +231,7 @@ final class InitCommandTest extends TestCase
             $constants[] = substr($line, 0, strpos($line, '='));
         }
 
-        self::assertEquals(self::WP_CONFIG_CONSTANTS, $constants);
+        $this->assertEquals(self::WP_CONFIG_CONSTANTS, $constants);
     }
 
     /**
@@ -275,7 +275,7 @@ final class InitCommandTest extends TestCase
 
     private function cleanTestProject(): void
     {
-        if (!isset($this->projectDir)) {
+        if (! isset($this->projectDir)) {
             $class = __CLASS__;
 
             throw new \RuntimeException(

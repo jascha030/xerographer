@@ -3,12 +3,13 @@
 namespace Jascha030\Xerox\Console\Command;
 
 use Exception;
+use Jascha030\Twig\Templater\TemplaterInterface;
+use Jascha030\Twig\TwigService;
 use Jascha030\Xerox\Console\Question\AsksConsoleQuestionsTrait;
 use Jascha030\Xerox\Database\DatabaseService;
-use Jascha030\Xerox\Twig\TemplaterInterface;
-use Jascha030\Xerox\Twig\TwigTemplater;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
-use RuntimeException;
+use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -24,9 +25,9 @@ final class InitCommand extends Command
 {
     use AsksConsoleQuestionsTrait;
 
-    private const SALTS_URL   = "https://api.wordpress.org/secret-key/1.1/salt";
+    private const SALTS_URL = 'https://api.wordpress.org/secret-key/1.1/salt';
 
-    private const CONST_REGEX = "/define\('([A-Z_]*)',[ \t]*'(.*)'\);/";
+    private const CONST_REGEX = "/define\\('([A-Z_]*)',[ \t]*'(.*)'\\);/";
 
     private bool $production;
 
@@ -46,7 +47,7 @@ final class InitCommand extends Command
     public function configure(): void
     {
         $this->setDescription('Init a new Environment with database.')
-             ->addOption('production', 'p', InputOption::VALUE_NONE);
+            ->addOption('production', 'p', InputOption::VALUE_NONE);
     }
 
     public function getQuestionKey(): string
@@ -59,6 +60,9 @@ final class InitCommand extends Command
         return $this->getHelper('question');
     }
 
+    /**
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface
+     */
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->production = $input->getOption('production');
@@ -80,8 +84,8 @@ final class InitCommand extends Command
         $url = $this->ask($input, $output, 'url');
 
         try {
-            $this->generateDotEnv($database, $user, $password, sprintf("https://%s.test", $url), $this->getSalts());
-        } catch (LoaderError | RuntimeError | SyntaxError $e) {
+            $this->generateDotEnv($database, $user, $password, sprintf('https://%s.test', $url), $this->getSalts());
+        } catch (LoaderError|RuntimeError|SyntaxError $e) {
             $output->writeln($e->getMessage());
 
             return Command::FAILURE;
@@ -102,16 +106,15 @@ final class InitCommand extends Command
     }
 
     /**
-     * @throws RuntimeError
-     * @throws SyntaxError
-     * @throws LoaderError
+     * @throws LoaderError|RuntimeError|SyntaxError
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface
      */
     public function generateEnvContents(string $database, string $user, string $password, string $url, string $salts): string
     {
-        /** @var TwigTemplater $templater */
+        /** @var TwigService $templater */
         $templater = $this->container->get(TemplaterInterface::class);
 
-        return $templater->render(
+        return $templater->renderString(
             'env.twig',
             [
                 'name'     => $database,
@@ -129,8 +132,10 @@ final class InitCommand extends Command
     public function getSalts(): string
     {
         $resource = curl_init();
+
         curl_setopt($resource, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($resource, CURLOPT_URL, self::SALTS_URL);
+
         $data = curl_exec($resource);
         curl_close($resource);
 
@@ -153,9 +158,8 @@ final class InitCommand extends Command
     }
 
     /**
-     * @throws RuntimeError
-     * @throws SyntaxError
-     * @throws LoaderError
+     * @throws LoaderError|RuntimeError|SyntaxError
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface
      */
     private function generateDotEnv(string $database, string $user, string $password, string $url, string $salts): void
     {

@@ -7,12 +7,16 @@ namespace Jascha030\Xerox\Tests\Config;
 use Jascha030\Xerox\Config\WPConfigStore;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ * @covers \Jascha030\Xerox\Config\WPConfigStore
+ */
 class WPConfigStoreTest extends TestCase
 {
     private const TEST_VALUES = [
-        'DB_NAME' => 'testdb',
-        'DB_USER' => 'user',
-        'WP_HOME' => 'https://example.test',
+        'DB_NAME'  => 'testdb',
+        'DB_USER'  => 'user',
+        'WP_HOME'  => 'https://example.test',
         'WP_DEBUG' => true,
     ];
 
@@ -23,7 +27,7 @@ class WPConfigStoreTest extends TestCase
         $store = WPConfigStore::create(self::TEST_VALUES);
 
         /** @noinspection UnnecessaryAssertionInspection */
-        self::assertInstanceOf(WPConfigStore::class, $store);
+        $this->assertInstanceOf(WPConfigStore::class, $store);
 
         return $store;
     }
@@ -46,11 +50,11 @@ class WPConfigStoreTest extends TestCase
     public function testHas(WPConfigStore $store): void
     {
         foreach (self::TEST_VALUES as $key => $value) {
-            self::assertTrue($store::has($key));
-            self::assertTrue(WPConfigStore::has($key));
+            $this->assertTrue($store::has($key));
+            $this->assertTrue(WPConfigStore::has($key));
         }
 
-        self::assertFalse($store::has(self::UNSET_KEY));
+        $this->assertFalse($store::has(self::UNSET_KEY));
     }
 
     /**
@@ -58,16 +62,16 @@ class WPConfigStoreTest extends TestCase
      */
     public function testAdd(WPConfigStore $store): void
     {
-        self::assertFalse(WPConfigStore::has('theAnswer'));
+        $this->assertFalse(WPConfigStore::has('theAnswer'));
         WPConfigStore::add('theAnswer', 42);
 
-        self::assertTrue(WPConfigStore::has('theAnswer'));
-        self::assertEquals(42, WPConfigStore::get('theAnswer'));
+        $this->assertTrue(WPConfigStore::has('theAnswer'));
+        $this->assertEquals(42, WPConfigStore::get('theAnswer'));
 
         // Test immutability
         WPConfigStore::add('theAnswer', 41);
-        self::assertEquals(42, WPConfigStore::get('theAnswer'));
-        self::assertEquals(42, $store::get('theAnswer'));
+        $this->assertEquals(42, WPConfigStore::get('theAnswer'));
+        $this->assertEquals(42, $store::get('theAnswer'));
     }
 
     /**
@@ -76,11 +80,11 @@ class WPConfigStoreTest extends TestCase
     public function testGet(WPConfigStore $store): void
     {
         foreach (self::TEST_VALUES as $key => $value) {
-            self::assertEquals($value, $store::get($key));
-            self::assertEquals($value, WPConfigStore::get($key));
+            $this->assertEquals($value, $store::get($key));
+            $this->assertEquals($value, WPConfigStore::get($key));
 
-            self::assertEquals(gettype($value), gettype($store::get($key)));
-            self::assertEquals(gettype($value), gettype(WPConfigStore::get($key)));
+            $this->assertEquals(gettype($value), gettype($store::get($key)));
+            $this->assertEquals(gettype($value), gettype(WPConfigStore::get($key)));
         }
     }
 
@@ -103,16 +107,16 @@ class WPConfigStoreTest extends TestCase
      */
     public function testUnset(): void
     {
-        self::assertFalse(WPConfigStore::has('TEST_CONSTANT'));
+        $this->assertFalse(WPConfigStore::has('TEST_CONSTANT'));
         WPConfigStore::add('TEST_CONSTANT', 'test value');
 
-        self::assertTrue(WPConfigStore::has('TEST_CONSTANT'));
-        self::assertEquals('test value', WPConfigStore::get('TEST_CONSTANT'));
+        $this->assertTrue(WPConfigStore::has('TEST_CONSTANT'));
+        $this->assertEquals('test value', WPConfigStore::get('TEST_CONSTANT'));
 
-        self::assertTrue(WPConfigStore::unset('TEST_CONSTANT'));
-        self::assertFalse(WPConfigStore::unset(self::UNSET_KEY));
+        $this->assertTrue(WPConfigStore::unset('TEST_CONSTANT'));
+        $this->assertFalse(WPConfigStore::unset(self::UNSET_KEY));
 
-        self::assertFalse(WPConfigStore::has('TEST_CONSTANT'));
+        $this->assertFalse(WPConfigStore::has('TEST_CONSTANT'));
     }
 
     /**
@@ -126,15 +130,15 @@ class WPConfigStoreTest extends TestCase
     {
         // Assert constants are not yet set.
         foreach (self::TEST_VALUES as $key => $value) {
-            self::assertFalse(defined($key));
+            $this->assertFalse(defined($key));
         }
 
         // Assert missing required value.
         try {
             WPConfigStore::save();
         } catch (\Exception $exception) {
-            self::assertInstanceOf(\RuntimeException::class, $exception);
-            self::assertEquals(
+            $this->assertInstanceOf(\RuntimeException::class, $exception);
+            $this->assertEquals(
                 'Can\'t initialize WP without required wp-config value: "DB_PASSWORD".',
                 $exception->getMessage()
             );
@@ -143,7 +147,7 @@ class WPConfigStoreTest extends TestCase
         WPConfigStore::add('DB_PASSWORD', 'password');
 
         // Assert that we can't set predefined constant.
-        self::assertFalse(defined('TEST_CONSTANT'));
+        $this->assertFalse(defined('TEST_CONSTANT'));
         define('TEST_CONSTANT', 'test value');
 
         WPConfigStore::add('TEST_CONSTANT', 'test value 2');
@@ -151,8 +155,8 @@ class WPConfigStoreTest extends TestCase
         try {
             WPConfigStore::save();
         } catch (\Exception $exception) {
-            self::assertInstanceOf(\RuntimeException::class, $exception);
-            self::assertEquals(
+            $this->assertInstanceOf(\RuntimeException::class, $exception);
+            $this->assertEquals(
                 'Trying to define already defined constant: "TEST_CONSTANT".',
                 $exception->getMessage()
             );
@@ -165,8 +169,8 @@ class WPConfigStoreTest extends TestCase
         WPConfigStore::save();
 
         foreach (self::TEST_VALUES as $key => $value) {
-            self::assertTrue(defined($key));
-            self::assertEquals($value, constant($key));
+            $this->assertTrue(defined($key));
+            $this->assertEquals($value, constant($key));
         }
     }
 }

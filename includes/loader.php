@@ -5,7 +5,7 @@ declare(strict_types=1);
 $autoloader = static function () {
     $locations = [
         dirname(__FILE__, 2) . '/vendor/autoload.php',
-        dirname(__FILE__, 4) .  '/autoload.php',
+        dirname(__FILE__, 4) . '/autoload.php',
         getenv('HOME') . '/.composer/vendor/autoload.php',
     ];
 

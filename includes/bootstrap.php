@@ -19,7 +19,7 @@ $containerBuilder = new ContainerBuilder(Container::class);
 /**
  * Add Container definition config files.
  */
-foreach(Xerographer::getConfigurationFiles() as $definitionFile) {
+foreach (Xerographer::getConfigurationFiles() as $definitionFile) {
     $containerBuilder->addDefinitions($definitionFile);
 }
 
@@ -33,6 +33,7 @@ $containerBuilder->useAnnotations(false);
  * Build and return Container.
  *
  * @noinspection PhpUnhandledExceptionInspection
+ *
  * @return Container
  */
 return $containerBuilder->build();

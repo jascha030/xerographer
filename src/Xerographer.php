@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jascha030\Xerox;
 
 use Jascha030\Xerox\Console\Command\InitCommand;
@@ -17,10 +19,10 @@ final class Xerographer
     public const APP_NAME = 'Xerographer';
 
     /**
-     * Console app commands
+     * Console app commands.
      */
     public const APP_COMMANDS = [
-        InitCommand::class
+        InitCommand::class,
     ];
 
     /**
@@ -34,7 +36,7 @@ final class Xerographer
 
         return [
             "{$configDir}/console.php",
-            "{$configDir}/twig.php"
+            "{$configDir}/twig.php",
         ];
     }
 }
