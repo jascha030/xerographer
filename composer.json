@@ -44,6 +44,9 @@
     "post-root-package-install": [
       "@init-env"
     ],
-    "phpunit": "vendor/bin/phpunit"
+    "php-cs-fixer": "php-cs-fixer fix --config=.php-cs-fixer.dist.php",
+    "phpunit": "phpunit --config phpunit.xml",
+    "format": "@php-cs-fixer",
+    "test": "@phpunit"
   }
 }
