@@ -6,24 +6,28 @@ namespace Jascha030\Xerox\Tests\Console\Command;
 
 use DI\ContainerBuilder;
 use Exception;
-use Jascha030\Xerox\Application\Application;
 use Jascha030\Xerox\Console\Command\InitCommand;
 use Jascha030\Xerox\Database\DatabaseService;
 use Jascha030\Xerox\Tests\TestDotEnvTrait;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use RuntimeException;
+use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
+use function Jascha030\Xerox\Helpers\container;
+use function Jascha030\Xerox\Helpers\definitions;
 
 /**
  * @covers \Jascha030\Xerox\Console\Command\InitCommand
  * @covers \Jascha030\Xerox\Console\Question\AsksConsoleQuestionsTrait
+ *
  * @internal
  */
 final class InitCommandTest extends TestCase
@@ -68,12 +72,11 @@ final class InitCommandTest extends TestCase
     }
 
     /**
-     * @throws Exception
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface
      */
     public function testConstruct(): InitCommand
     {
-        $container = $this->getContainer();
-        $command   = new InitCommand($container);
+        $command = container()->get('commands')['init'] ?? null;
 
         $this->assertInstanceOf(InitCommand::class, $command);
 
@@ -120,6 +123,7 @@ final class InitCommandTest extends TestCase
      * @depends testGetSalts
      * @depends testGenerateEnvContents
      *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface
      * @throws \Doctrine\DBAL\Exception
      */
     public function testExecute(InitCommand $command): void
@@ -148,6 +152,7 @@ final class InitCommandTest extends TestCase
     }
 
     /**
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface
      * @throws \Doctrine\DBAL\Exception
      * @throws Exception
      */
@@ -155,7 +160,7 @@ final class InitCommandTest extends TestCase
     {
         $env         = $this->getDotEnv();
         $projectName = uniqid('unittest', false);
-        $command     = new InitCommand($this->getContainerWithTestTwigEnvironment());
+        $command     = $this->getContainerWithTestTwigEnvironment()->get('commands')['init'];
         $command->setApplication($this->getApplication());
 
         $commandTester = new CommandTester($command);
@@ -174,9 +179,12 @@ final class InitCommandTest extends TestCase
         $database->dropDatabase("wp_{$projectName}");
     }
 
+    /**
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface
+     */
     public function testFailureOnInvalidDatabaseCredentials(): void
     {
-        $command = new InitCommand($this->getContainer());
+        $command = container()->get('commands')['init'];
         $command->setApplication($this->getApplication());
 
         $commandTester = new CommandTester($command);
@@ -195,10 +203,6 @@ final class InitCommandTest extends TestCase
 
     /**
      * @depends testConstruct
-     *
-     * @throws LoaderError
-     * @throws RuntimeError
-     * @throws SyntaxError
      */
     public function testGenerateEnvContents(InitCommand $command): void
     {
@@ -235,20 +239,16 @@ final class InitCommandTest extends TestCase
     }
 
     /**
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface
      * @throws Exception
      */
     public function testExceptionIsThrownOnInvalidTwigTemplate(): void
     {
-        $command = new InitCommand($this->getContainerWithTestTwigEnvironment());
+        $command = $this->getContainerWithTestTwigEnvironment()->get('commands')['init'];
         $command->setApplication($this->getApplication());
 
         $this->expectException(LoaderError::class);
         $command->generateEnvContents(...array_values(self::TEST_VALUES));
-    }
-
-    private function getContainer(): ContainerInterface
-    {
-        return include dirname(__FILE__, 4) . '/includes/bootstrap.php';
     }
 
     /**
@@ -256,18 +256,23 @@ final class InitCommandTest extends TestCase
      */
     private function getContainerWithTestTwigEnvironment(): ContainerInterface
     {
-        $builder = new ContainerBuilder();
-        $builder->useAutowiring(false);
-        $builder->useAnnotations(false);
-        $builder->addDefinitions(dirname(__FILE__, 4) . '/config/console.php');
-        $builder->addDefinitions(dirname(__FILE__, 3) . '/test-twig-definition.php');
+        $builder = (new ContainerBuilder())
+            ->useAutowiring(false)
+            ->useAnnotations(false);
+
+        foreach (definitions(dirname(__FILE__, 3) . '/Fixtures/definitions') as $definition) {
+            $builder->addDefinitions($definition);
+        }
 
         return $builder->build();
     }
 
+    /**
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface
+     */
     private function getApplication(): Application
     {
-        $app = new Application($this->getContainer());
+        $app = container()->get('app');
         $app->setAutoExit(false);
 
         return $app;
@@ -278,7 +283,7 @@ final class InitCommandTest extends TestCase
         if (! isset($this->projectDir)) {
             $class = __CLASS__;
 
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 "`{$class}::cleanTestProject()` can't run before `{$class}::setUp()`."
             );
         }

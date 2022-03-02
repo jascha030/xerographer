@@ -25,7 +25,7 @@ WordPress.**
 
 ## Prerequisites
 
-* PHP `7.4` (untested, but probably compatible with PHP `8`)
+* PHP `8.0`
 * Composer `2+`
 * WordPress `5+`
 

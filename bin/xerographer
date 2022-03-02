@@ -5,53 +5,44 @@ declare(strict_types=1);
 
 namespace Jascha030;
 
-use DI\Container;
-use Jascha030\Xerox\Application\Application;
-use Psr\Container\ContainerInterface;
+use Exception;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use function Jascha030\Xerox\Helpers\container;
 
 /**
- * Load Container config script.
- * Loads autoloader, and bootstraps the Container.
- *
- * @returns Container
+ * Loader loads autoload.php, locally or from $HOME/.composer/vendor/autoload.php.
  */
-$container = include dirname(__FILE__, 2) . '/includes/bootstrap.php';
+include dirname(__DIR__) . '/includes/loader.php';
+
+require_once loader();
 
 /**
- * Create Input and Output streams for exception display.
+ * Create Output stream for exception display.
  */
-$input  = new ArgvInput();
 $output = new ConsoleOutput();
-
-/**
- * Write error message to the ConsoleOutput when $container is invalid.
- */
-if (! is_subclass_of($container, ContainerInterface::class)) {
-    $output->writeln('Could not load the app container.');
-    $output->writeln('Exiting application.');
-
-    return Command::FAILURE;
-}
 
 /**
  * Create the console Application instance.
  *
- * @see Application
- * @see \Symfony\Component\Console\Application
+ * @var Application $app
+ * @noinspection PhpUnhandledExceptionInspection
+ *
+ * @see          Application
+ * @see          \Symfony\Component\Console\Application
  */
-$app = new Application($container);
-
+$app = container()->get('app');
 
 /**
  * Run the Console Application
  * thrown Exceptions are caught and their messages are written to ConsoleOutput.
  */
 try {
-    $app->run($input, $output);
-} catch (\Exception $e) {
+    $app->run(output: $output);
+} catch (Exception|NotFoundExceptionInterface|ContainerExceptionInterface $e) {
     $output->writeln($e->getMessage());
 
     return Command::FAILURE;

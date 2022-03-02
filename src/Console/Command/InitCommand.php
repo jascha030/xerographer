@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jascha030\Xerox\Console\Command;
 
 use Exception;
 use Jascha030\Twig\Templater\TemplaterInterface;
-use Jascha030\Twig\TwigService;
 use Jascha030\Xerox\Console\Question\AsksConsoleQuestionsTrait;
 use Jascha030\Xerox\Database\DatabaseService;
 use Psr\Container\ContainerExceptionInterface;
@@ -20,6 +21,7 @@ use Symfony\Component\Process\Process;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
+use function Jascha030\Xerox\Helpers\container;
 
 final class InitCommand extends Command
 {
@@ -33,11 +35,9 @@ final class InitCommand extends Command
 
     private string $directory;
 
-    private ContainerInterface $container;
-
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container  = $container;
+    public function __construct(
+        private TemplaterInterface $templater
+    ) {
         $this->directory  = getcwd();
         $this->production = false;
 
@@ -105,16 +105,9 @@ final class InitCommand extends Command
         );
     }
 
-    /**
-     * @throws LoaderError|RuntimeError|SyntaxError
-     * @throws ContainerExceptionInterface|NotFoundExceptionInterface
-     */
     public function generateEnvContents(string $database, string $user, string $password, string $url, string $salts): string
     {
-        /** @var TwigService $templater */
-        $templater = $this->container->get(TemplaterInterface::class);
-
-        return $templater->renderString(
+        return $this->templater->renderString(
             'env.twig',
             [
                 'name'     => $database,
@@ -154,13 +147,9 @@ final class InitCommand extends Command
 
     protected function getQuestionContainer(): ContainerInterface
     {
-        return $this->container;
+        return container();
     }
 
-    /**
-     * @throws LoaderError|RuntimeError|SyntaxError
-     * @throws ContainerExceptionInterface|NotFoundExceptionInterface
-     */
     private function generateDotEnv(string $database, string $user, string $password, string $url, string $salts): void
     {
         $envString = $this->generateEnvContents($database, $user, $password, $url, $salts);

@@ -2,7 +2,8 @@
 
 declare(strict_types=1);
 
-$autoloader = static function () {
+function loader(): string
+{
     $locations = [
         dirname(__FILE__, 2) . '/vendor/autoload.php',
         dirname(__FILE__, 4) . '/autoload.php',
@@ -16,14 +17,11 @@ $autoloader = static function () {
     }
 
     $errorMsg = sprintf(
-        'Couldn\'t find Composer\'s Autoloader file in any of the following paths: 
-                %s, please make sure you run the %s or %s commands.',
+        'Couldn\'t find Composer\'s Autoloader file in any of the following paths: %s, please make sure you run the %s or %s commands.',
         implode(', ', $locations),
         '<pre>composer install --prefer-source</pre>',
         '<pre>composer dump-autoload</pre>'
     );
 
     throw new \RuntimeException($errorMsg);
-};
-
-require_once $autoloader();
+}
