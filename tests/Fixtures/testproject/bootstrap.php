@@ -8,9 +8,11 @@
 declare(strict_types=1);
 
 /**
- * Load the container and composer autoloader.
+ * Load the composer autoloader.
  */
-$container = include dirname(__FILE__, 4) . '/includes/bootstrap.php';
+include dirname(__FILE__, 4) . '/includes/loader.php';
+
+require_once loader();
 
 /**
  * Change working directory to current dir.
