@@ -13,6 +13,10 @@ use Jascha030\Xerox\Database\DatabaseServiceInterface;
 use Jascha030\Xerox\Tests\TestDotEnvTrait;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ * @covers \Jascha030\Xerox\Database\DatabaseService
+ */
 final class DatabaseServiceTest extends TestCase
 {
     use TestDotEnvTrait;
@@ -24,14 +28,15 @@ final class DatabaseServiceTest extends TestCase
         $env     = $this->getDotEnv();
         $service = new DatabaseService($env['DB_USER'], $env['DB_PASSWORD']);
 
-        self::assertInstanceOf(DatabaseServiceInterface::class, $service);
-        self::assertInstanceOf(DatabaseRemovalInterface::class, $service);
+        $this->assertInstanceOf(DatabaseServiceInterface::class, $service);
+        $this->assertInstanceOf(DatabaseRemovalInterface::class, $service);
 
         return $service;
     }
 
     /**
      * @depends testConstructDatabaseService
+     *
      * @throws Exception
      */
     public function testCreateDatabase(DatabaseServiceInterface $service): string
@@ -43,12 +48,12 @@ final class DatabaseServiceTest extends TestCase
         $schemaManager = $connection->createSchemaManager();
 
         // First assert our database is not present beforehand.
-        self::assertArrayNotHasKey("wp_{$databaseName}", array_flip($schemaManager->listDatabases()));
+        $this->assertArrayNotHasKey("wp_{$databaseName}", array_flip($schemaManager->listDatabases()));
 
         $service->createDatabase($databaseName);
 
         // Assert our database is present after creation.
-        self::assertArrayHasKey("wp_{$databaseName}", array_flip($schemaManager->listDatabases()));
+        $this->assertArrayHasKey("wp_{$databaseName}", array_flip($schemaManager->listDatabases()));
 
         return "wp_{$databaseName}";
     }
@@ -56,6 +61,7 @@ final class DatabaseServiceTest extends TestCase
     /**
      * @depends testConstructDatabaseService
      * @depends testCreateDatabase
+     *
      * @throws Exception
      */
     public function testDropDatabase(DatabaseRemovalInterface $service, string $databaseName): void
@@ -66,12 +72,12 @@ final class DatabaseServiceTest extends TestCase
         $schemaManager = $connection->createSchemaManager();
 
         // First assert our database IS present beforehand.
-        self::assertArrayHasKey($databaseName, array_flip($schemaManager->listDatabases()));
+        $this->assertArrayHasKey($databaseName, array_flip($schemaManager->listDatabases()));
 
         $service->dropDatabase($databaseName);
 
         // Assert our database is absent after deletion.
-        self::assertArrayNotHasKey($databaseName, array_flip($schemaManager->listDatabases()));
+        $this->assertArrayNotHasKey($databaseName, array_flip($schemaManager->listDatabases()));
     }
 
     /**

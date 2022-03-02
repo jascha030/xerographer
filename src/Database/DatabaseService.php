@@ -37,7 +37,7 @@ class DatabaseService implements DatabaseServiceInterface, DatabaseRemovalInterf
      */
     public function createDatabase(string $name): void
     {
-        if (strpos($name, 'wp_') === false) {
+        if (false === strpos($name, 'wp_')) {
             $name = 'wp_' . $name;
         }
 

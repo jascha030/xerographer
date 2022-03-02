@@ -9,7 +9,7 @@ final class WPConfigStore
         'DB_USER',
         'DB_PASSWORD',
         'WP_HOME',
-        'WP_DEBUG'
+        'WP_DEBUG',
     ];
 
     public const BOOLEAN_VALUES = [
@@ -18,7 +18,7 @@ final class WPConfigStore
         'DISALLOW_FILE_EDIT',
         'DISALLOW_FILE_MODS',
         'WP_POST_REVISIONS',
-        'WP_DEBUG'
+        'WP_DEBUG',
     ];
 
     public static array $store;
@@ -87,7 +87,7 @@ final class WPConfigStore
         }
 
         foreach (self::REQUIRED_VALUES as $key) {
-            if (!isset(self::$store[$key])) {
+            if (! isset(self::$store[$key])) {
                 throw new \RuntimeException("Can't initialize WP without required wp-config value: \"{$key}\".");
             }
         }

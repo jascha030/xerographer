@@ -2,15 +2,15 @@
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd" backupGlobals="false" bootstrap="tests/Fixtures/testproject/bootstrap.php" colors="true" verbose="true" testdox="true">
     <coverage processUncoveredFiles="true">
         <include>
-            <directory suffix=".php">src</directory>
+            <directory suffix=".php">../../../src</directory>
         </include>
         <report>
-            <clover outputFile="cov.xml"/>
+            <clover outputFile="../../../cov.xml"/>
             <text outputFile="php://stdout"/>
         </report>
     </coverage>
     <testsuite name="main">
-        <directory>tests</directory>
+        <directory>../../../tests</directory>
     </testsuite>
     <logging/>
 </phpunit>
