@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1646262446">
-  <project timestamp="1646262446">
+<coverage generated="1646263210">
+  <project timestamp="1646263210">
     <file name="/Users/jaschavanaalst/.development/Projects/xerox/xerographer/src/Config/WPConfigStore.php">
       <class name="Jascha030\Xerox\Config\WPConfigStore" namespace="global">
         <metrics complexity="19" methods="8" coveredmethods="8" conditionals="0" coveredconditionals="0" statements="23" coveredstatements="23" elements="31" coveredelements="31"/>

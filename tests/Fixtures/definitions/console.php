@@ -2,4 +2,4 @@
 
 declare(strict_types=1);
 
-return include dirname(__FILE__, 4) . '/config/console.php';
+return include dirname(__FILE__, 4) . '/includes/definitions/console.php';

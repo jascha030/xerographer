@@ -11,7 +11,7 @@ use function DI\create;
 use function DI\get;
 
 return [
-    'twig.root'               => dirname(__DIR__) . '/templates',
+    'twig.root'               => dirname(__FILE__, 3) . '/templates',
     LoaderInterface::class    => create(FilesystemLoader::class)->constructor(get('twig.root')),
     Environment::class        => create(Environment::class)->constructor(get(LoaderInterface::class)),
     TemplaterInterface::class => create(TwigService::class)->constructor(get(Environment::class)),

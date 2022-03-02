@@ -14,7 +14,7 @@ use Psr\Container\ContainerInterface;
  */
 function definitions(?string $dir = null): \Generator
 {
-    $dir ?? $dir = dirname(__FILE__, 3) . '/config';
+    $dir ?? $dir = dirname(__DIR__) . '/definitions';
     $files       = array_diff(scandir($dir), ['..', '.']);
 
     foreach ($files as $file) {
