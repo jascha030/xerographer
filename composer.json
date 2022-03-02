@@ -45,12 +45,12 @@
   ],
   "scripts": {
     "init-env": "php -r \"copy('tests/.env.example', 'tests/.env');\"",
-    "post-root-package-install": [
-      "@init-env"
-    ],
     "php-cs-fixer": "php-cs-fixer fix --config=.php-cs-fixer.dist.php",
     "phpunit": "phpunit --config phpunit.xml",
     "format": "@php-cs-fixer",
-    "test": "@phpunit"
+    "test": "@phpunit",
+    "post-root-package-install": [
+      "@init-env"
+    ]
   }
 }
