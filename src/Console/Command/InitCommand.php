@@ -35,9 +35,8 @@ final class InitCommand extends Command
 
     private string $directory;
 
-    public function __construct(
-        private TemplaterInterface $templater
-    ) {
+    public function __construct(private TemplaterInterface $templater)
+    {
         $this->directory  = getcwd();
         $this->production = false;
 

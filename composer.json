@@ -29,10 +29,11 @@
   },
   "autoload": {
     "files": [
-      "includes/helpers/container.php"
+      "includes/helpers/container.php",
+      "includes/helpers/string.php"
     ],
     "psr-4": {
-      "Jascha030\\Xerox\\": "src/"
+      "Jascha030\\Xerox\\": "src"
     }
   },
   "autoload-dev": {
