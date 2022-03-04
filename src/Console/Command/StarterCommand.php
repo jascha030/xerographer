@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Jascha030\Xerox\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -25,19 +26,26 @@ final class StarterCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output): ?int
     {
-        $project = sanitizeProjectName($input->getArgument('name'));
-
+        $name    = $input->getArgument('name');
+        $project = sanitizeProjectName($name);
+        $bar     = new ProgressBar($output, 100);
         $process = Process::fromShellCommandline("`which composer` create-project jascha030/wp-starter {$project}", getcwd());
+
+        $output->writeln(sprintf('Creating new project <info>%s...</info>', $name));
+
         $process->start();
+        $bar->start();
 
-        foreach ($process as $type => $line) {
-            if (Process::ERR === $type) {
-                $line = sprintf('<error>%s</error>', $line);
-            }
+        $process->wait(static function (string $type, $buffer) use ($bar): void {
+            $bar->advance();
+        });
 
-            $output->writeln($line);
-        }
+        $bar->finish();
+        $code = $process->getExitCode();
 
-        return $process->getExitCode();
+        $output->writeln('');
+        $output->writeln($code > 0 ? '<error>Something went wrong</error>' : 'Done!');
+
+        return $code;
     }
 }
