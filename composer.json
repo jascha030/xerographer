@@ -25,7 +25,7 @@
     "roave/security-advisories": "dev-latest",
     "friendsofphp/php-cs-fixer": "^3.1",
     "phpunit/phpunit": "^9.5",
-    "composer/composer": "^2.1"
+    "composer/composer": "^2"
   },
   "autoload": {
     "files": [
