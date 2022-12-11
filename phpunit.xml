@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+    xsi:noNamespaceSchemaLocation="vendor-bin/phpunit/vendor/phpunit/phpunit/phpunit.xsd"
     bootstrap="vendor/autoload.php"
     cacheResult="false"
     colors="true"
@@ -9,7 +9,7 @@
     testdox="true"
     cacheResultFile=".var/cache/phpunit/phpunit.result.cache"
 >
-    <coverage processUncoveredFiles="true" cacheDirectory=".cache">
+    <coverage processUncoveredFiles="true" cacheDirectory=".var/cache/phpunit">
         <include>
             <directory suffix=".php">src</directory>
         </include>
