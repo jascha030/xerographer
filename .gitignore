@@ -1,14 +1,30 @@
-# Jetbrains
-/.idea/
+# IDE Projectfiles
+.idea/
+.vscode/
 
-# Composer
-/vendor/
-
-# MacOS
-**/.DS_Store
-
-# Php cache files
+# Dynamic
+.var/
+temp/
+tmp/
+dist/
+build/
+.cache/
 **.cache
 
-# Testing .env
-/tests/.env
+# Library
+vendor/
+node_modules/
+tools/
+
+# Env
+tests/.env
+.env
+auth.json
+.pm.toml
+
+# Other
+*.DS_Store
+.DS_Store
+*.sql
+TODO.md
+

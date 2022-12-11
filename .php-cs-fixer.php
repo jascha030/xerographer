@@ -10,7 +10,12 @@ declare(strict_types=1);
  * @PSR-12
  * @PhpCSFixer
  */
-$rules = [
+
+use PhpCsFixer\Config;
+use PhpCsFixer\ConfigInterface;
+use PhpCsFixer\Finder;
+
+$rules = new ArrayIterator([
     'blank_line_after_namespace'         => true,
     'blank_line_after_opening_tag'       => false, // due to WordPress
     'braces'                             => ['allow_single_line_anonymous_class_with_empty_body' => true],
@@ -225,13 +230,29 @@ $rules = [
     'unary_operator_spaces'                         => true,
     'whitespace_after_comma_in_array'               => true,
     'yoda_style'                                    => true,
-];
+]);
 
-return (new PhpCsFixer\Config())
-    ->setRules($rules)
-    ->setRiskyAllowed(true)
-    ->setFinder(
-        PhpCsFixer\Finder::create()
-        ->exclude('vendor')
-        ->in(__DIR__)
-    );
+/**
+ * Returns the Php-cs-fixer Configuration.
+ * Creates a .cache dir if not already present.
+ */
+return (static function (Traversable $rules, ?string $cacheDirectory = null): ConfigInterface {
+    if (! $cacheDirectory) {
+        $cacheDirectory = __DIR__ . '/.cache';
+    }
+
+    if (! file_exists($cacheDirectory) && ! mkdir($cacheDirectory, 0700) && ! is_dir($cacheDirectory)) {
+        throw new RuntimeException(
+            sprintf('Directory "%s" was not created', $cacheDirectory)
+        );
+    }
+
+    /**
+     * @noinspection PhpUnnecessaryCurlyVarSyntaxInspection
+     */
+    return (new Config())
+        ->setRules(iterator_to_array($rules))
+        ->setRiskyAllowed(true)
+        ->setCacheFile("{$cacheDirectory}/.php-cs-fixer.cache")
+        ->setFinder(Finder::create()->exclude(['vendor', '.cache'])->in(__DIR__));
+})($rules);

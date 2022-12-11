@@ -1,0 +1,11 @@
+.github/ export-ignore
+.bitbucket-pipelines.yml export-ignore
+.php-cs-fixer.php export-ignore
+.php_cs.php export-ignore
+.twig_cs.php export-ignore
+.phpstan.neon export-ignore
+.phstormm.meta.php export-ignore
+.phpunit.xml export-ignore
+phpunit.xml export-ignore
+webpack.* export-ignore
+.env.example export-ignore
