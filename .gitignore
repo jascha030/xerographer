@@ -3,7 +3,10 @@
 .vscode/
 
 # Dynamic
-.var/
+.var/cache/phpunit/*
+!.var/cache/phpunit/.gitkeep
+.var/cache/php-cs-fixer/*
+!.var/cache/php-cs-fixer/.gitkeep
 temp/
 tmp/
 dist/
@@ -17,7 +20,6 @@ node_modules/
 tools/
 
 # Env
-tests/.env
 .env
 auth.json
 .pm.toml

@@ -5,9 +5,9 @@ declare(strict_types=1);
 
 namespace Jascha030;
 
+use ArrayIterator;
 use Exception;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
+use Iterator;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -16,10 +16,20 @@ use function Jascha030\Xerox\Helpers\container;
 /**
  * Loader loads autoload.php, locally or from $HOME/.composer/vendor/autoload.php.
  */
-include dirname(__DIR__) . '/includes/loader.php';
+(static function () {
+    require_once(static function (Iterator $paths): ?string {
+        foreach ($paths as $path) {
+            if (file_exists($path = sprintf('%s%s', dirname(__DIR__), $path))) {
+                return $path;
+            }
+        }
 
-require_once loader();
-
+        return null;
+    })(new ArrayIterator([
+        '/vendor/autoload.php',
+        '/autoload.php',
+    ])) ?? throw new \RuntimeException('Unable to resolve autoload.php');
+})();
 /**
  * Create Output stream for exception display.
  */
@@ -42,7 +52,7 @@ $app = container()->get('app');
  */
 try {
     $app->run(output: $output);
-} catch (Exception|NotFoundExceptionInterface|ContainerExceptionInterface $e) {
+} catch (Exception $e) {
     $output->writeln($e->getMessage());
 
     return Command::FAILURE;
