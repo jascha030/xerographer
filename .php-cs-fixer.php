@@ -7,7 +7,9 @@ declare(strict_types=1);
  * based on config sets below.
  *
  * @PSR-1
+ *
  * @PSR-12
+ *
  * @PhpCSFixer
  */
 
@@ -135,7 +137,7 @@ $rules = new ArrayIterator([
     'native_function_casing'                  => true,
     'native_function_type_declaration_casing' => true,
     'no_alias_language_construct_call'        => true,
-    'no_alternative_syntax'                   => true,
+    'no_alternative_syntax'                   => ['fix_non_monolithic_code' => false],
     'no_binary_string'                        => true,
     'no_empty_comment'                        => true,
     'no_empty_phpdoc'                         => true,
@@ -164,9 +166,12 @@ $rules = new ArrayIterator([
     'no_singleline_whitespace_before_semicolons'  => true,
     'no_spaces_around_offset'                     => true,
     'no_superfluous_elseif'                       => true,
-    'no_superfluous_phpdoc_tags'                  => ['allow_mixed' => true, 'allow_unused_params' => true],
-    'no_trailing_comma_in_list_call'              => true,
-    'no_unneeded_control_parentheses'             => [
+    'no_superfluous_phpdoc_tags'                  => [
+        'allow_mixed'         => true,
+        'allow_unused_params' => true,
+    ],
+    'no_trailing_comma_in_list_call'  => true,
+    'no_unneeded_control_parentheses' => [
         'statements' => [
             'break',
             'clone',
@@ -237,11 +242,11 @@ $rules = new ArrayIterator([
  * Creates a .cache dir if not already present.
  */
 return (static function (Traversable $rules, ?string $cacheDirectory = null): ConfigInterface {
-    if (! $cacheDirectory) {
-        $cacheDirectory = __DIR__ . '/.cache';
+    if (!$cacheDirectory) {
+        $cacheDirectory = __DIR__ . '/.var/cache/php-cs-fixer';
     }
 
-    if (! file_exists($cacheDirectory) && ! mkdir($cacheDirectory, 0700) && ! is_dir($cacheDirectory)) {
+    if (!file_exists($cacheDirectory) && !mkdir($cacheDirectory, 0700) && !is_dir($cacheDirectory)) {
         throw new RuntimeException(
             sprintf('Directory "%s" was not created', $cacheDirectory)
         );

@@ -9,7 +9,10 @@
     testdox="true"
     cacheResultFile=".var/cache/phpunit/phpunit.result.cache"
 >
-    <coverage processUncoveredFiles="true" cacheDirectory=".var/cache/phpunit">
+<coverage 
+    processUncoveredFiles="true" 
+    cacheDirectory=".var/cache/phpunit"
+>
         <include>
             <directory suffix=".php">src</directory>
         </include>
